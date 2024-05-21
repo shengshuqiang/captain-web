@@ -1,0 +1,861 @@
+<!-- http://awp.meituan.com/hfe/fep/e76082421c3843e1935bd77411ac5d5a.html -->
+<!-- https://talos.sankuai.com/vendor/fep/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="https://p0.meituan.net/mallimages/383c4d27b00999e6de7db2c01a02146690474.png"
+        type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 网络引入 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- <script src="../vue/vue.global.js"></script> -->
+    <!-- 弹窗库 https://sweetalert2.github.io/#declarative-templates，https://sweetalert2.github.io/ -->
+    <!-- 引入 SweetAlert 的 CSS 文件 -->
+    <!-- 引入 SweetAlert 的 JavaScript 文件 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <!-- <script src="../sweetalert2.js"></script> -->
+    <title>加减法</title>
+    <style>
+        html {
+            /* 设置rem基准单位 */
+            font-size: calc(100vw / 7.5);
+            height: 100%;
+            width: 100%;
+        }
+
+        .score-group {
+            height: 1rem;
+            width: 100%;
+            margin-top: -1rem;
+        }
+
+        .score {
+            word-break: break-all;
+            font-size: .32rem;
+        }
+
+        .swal2-popup {
+            /* swal2 里面通过 em 设置大小，必须重置回去 */
+            font-size: 16px !important;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+            padding: .5rem;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #app {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dialog {
+            font-size: .32rem;
+        }
+
+        .config {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .line {
+            font-size: .32rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: .5rem;
+            margin-top: .15rem;
+            margin-left: .15rem;
+        }
+
+        .num-selector {
+            width: 1rem;
+            margin-left: .1rem;
+            font-size: .26rem;
+        }
+
+        .num-option {
+            font-size: .1rem;
+        }
+
+        .margin-left {
+            margin-left: .1rem;
+        }
+
+        .margin-left-big {
+            margin-left: .3rem;
+        }
+
+        #board {
+            width: 100%;
+            height: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .15rem;
+            box-shadow: 0 0 .05rem #ccc;
+            border-radius: .08rem;
+            margin-top: .15rem;
+        }
+
+        #bomb-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* 给画布增加一个阴影和圆角的样式 */
+        #canvas {
+            padding: .15rem;
+            box-shadow: 0 0 .05rem #ccc;
+            border-radius: .08rem;
+            margin-top: .5rem;
+        }
+
+        /* 图标素材 https://fonts.google.com/icons */
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: .24rem;
+            line-height: .01rem;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #keyboard {
+            margin-top: .3rem;
+            padding: .15rem;
+            width: calc(100vw - 1rem);
+            display: flex;
+            flex-wrap: wrap;
+            box-shadow: 0 0 .05rem #ccc;
+            border-radius: .08rem;
+            padding-bottom: .15rem;
+        }
+
+        .key {
+            width: 1.6rem;
+            height: 1rem;
+            font-size: .52rem;
+            margin-top: .15rem;
+            margin-left: .15rem;
+        }
+
+        .forward-key {
+            color: greenyellow;
+            background-color: #567EBB;
+            border: none;
+        }
+    </style>
+    <!-- 倒计时炸弹 -->
+    <style>
+        .bomb-mm {
+            width: .8rem;
+            text-align: center;
+        }
+
+        .bomb-ss {
+            width: .8rem;
+            text-align: center;
+        }
+
+        .bomb-ms {
+            width: 1.2rem;
+            text-align: center;
+        }
+
+        .bomb-colon {
+            padding-bottom: .1rem;
+            text-align: center;
+        }
+
+        :root {
+            --fire-width: .5rem;
+            --fire-blur: 0;
+            --fire-blur: calc(var(--fire-width) * 0.03);
+            --color-start: orangered;
+            --color-end: yellow;
+        }
+
+        #bomb {
+            width: 3rem;
+            height: 3rem;
+            padding: .3rem;
+            border-radius: 50%;
+            background: radial-gradient(circle at 66% 33%, #555, black 50%);
+            position: relative;
+            display: grid;
+            place-items: center;
+            box-shadow: -.05rem .05rem .15rem rgba(0, 0, 0, 0.5);
+        }
+
+        #bomb:before {
+            content: "";
+            width: .1rem;
+            height: 1rem;
+            background: linear-gradient(to bottom right,
+                    #630 40%,
+                    peru 48%,
+                    peru 52%,
+                    #630 60%);
+            background-size: .1rem .1rem;
+            border-radius: .15rem .15rem 0 0;
+            position: absolute;
+            left: 100%;
+            top: -8.5%;
+            transform: rotate(50deg);
+            z-index: -1;
+        }
+
+        #bomb:after {
+            content: "";
+            width: 1rem;
+            height: 1rem;
+            background: linear-gradient(to top, black, #222);
+            border-radius: .15rem .15rem 0 0;
+            position: absolute;
+            left: 75%;
+            top: 0;
+            transform: rotate(50deg);
+            z-index: -1;
+            box-shadow: .05rem .05rem .1rem rgba(0, 0, 0, 0.5);
+        }
+
+        #time {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, sans-serif;
+            color: white;
+            text-align: center;
+            font-size: .48rem;
+            letter-spacing: .03rem;
+            line-height: 100%;
+        }
+
+        #time span {
+            font-size: .2rem !important;
+            display: block;
+            margin: 1.25rem 0;
+            font-weight: 100;
+            padding: 1.25rem 0;
+            letter-spacing: .01rem;
+        }
+
+        #time span:nth-child(1) {
+            border-bottom: .01rem solid gray;
+        }
+
+        #time span:nth-child(2) {
+            border-top: .01rem solid gray;
+        }
+
+        #flame_box {
+            width: .4rem;
+            height: .5rem;
+            position: absolute;
+            left: 107%;
+            top: -16.5%;
+            border-radius: 0 0 100% 100%;
+            overflow: hidden;
+            border-radius: 50% / 40% 40% 60% 60%;
+        }
+
+        .flame {
+            width: calc(var(--fire-width) * 0.2);
+            height: calc(var(--fire-width) * 0.2);
+            border-radius: 50%;
+            background: var(--color-start);
+            position: absolute;
+            bottom: 0;
+            transform: translateX(-50%);
+            filter: blur(var(--fire-blur));
+            animation: burn 1.5s ease-in forwards;
+        }
+
+        @keyframes burn {
+            0% {
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            100% {
+                background: var(--color-end);
+                bottom: calc(var(--fire-width) * 0.75);
+                opacity: 0;
+                transform: translateX(-50%) scale(0.2);
+            }
+        }
+    </style>
+    <!-- 酷炫下拉框 http://www.htmleaf.com/Demo/20141109433.html -->
+</head>
+
+<body>
+    <div id="app">
+        <div id="bomb-container">
+            <!-- 看板 -->
+            <!-- 倒计时炸弹 -->
+            <div id="bomb">
+                <div id="flame_box">
+                    <div class="flame" style="left: 5.51829%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 96.6102%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 15.1658%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 2.8373%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 18.9427%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 88.4761%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 0.589229%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 58.5504%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 33.5581%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 97.37%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 92.6273%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 61.413%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 6.12189%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 99.4008%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 30.3578%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 11.3331%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 6.81252%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 59.029%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 64.9899%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 46.6782%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 50.9622%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 31.195%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 11.1689%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 65.7699%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 20.1845%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 25.9775%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 60.517%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 20.666%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 35.5009%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 65.0609%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 48.0905%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 2.23943%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 43.8782%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 89.7532%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 58.5036%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 46.0519%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 44.8408%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 61.2655%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 58.8717%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 16.0905%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 64.6442%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 42.2755%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 23.6023%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 78.2061%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 28.9879%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 2.92948%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 68.5972%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 76.9592%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 4.74382%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 92.5846%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 70.9769%; animation-duration: 1.5s;"></div>
+                    <div class="flame" style="left: 70.664%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 24.9397%; animation-duration: 3s;"></div>
+                    <div class="flame" style="left: 97.841%; animation-duration: 3s;"></div>
+                </div>
+                <div id="time">🔥🤫💥</div>
+            </div>
+            <div class="score-group">
+                <div class="score">{{questionDoneCount}}/{{questionTotalCount}}</div>
+                <div class="score">{{scoreStr}}</div>
+            </div>
+        </div>
+        <canvas id="canvas">
+            当前浏览器不支持canvas元素，请升级或更换浏览器！
+        </canvas>
+        <div id="keyboard">
+            <button v-for="num in [1,2,3,4,5,6,7,8,9,0]" class="key" :disabled="keyDisabled"
+                @click="onKeyClick(num)">{{num}}</button>
+            <button class="material-icons key" @click="onKeyClick('backspace')">
+                backspace
+            </button>
+            <button class="material-icons key forward-key" :disabled="forwardDisabled" @click="onKeyClick('forward')">
+                forward
+            </button>
+        </div>
+    </div>
+    </div>
+
+
+    <script>
+        let context = null;
+        const ratio = window.devicePixelRatio || 1;
+        // const ratio = window.innerWidth / 750;
+        console.log({ ratio, devicePixelRatio: window.devicePixelRatio });
+        const rem = (num) => num * ratio;
+        let canvas = null;
+        let canvasWidth, canvasHeight;
+        const initCanvas = () => {
+            // 获取 canvas 元素
+            canvas = document.getElementById('canvas');
+            canvasWidth = window.innerWidth - 100;
+            canvasHeight = 200;
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/devicePixelRatio
+            canvas.width = rem(canvasWidth); // 实际渲染像素
+            canvas.height = rem(canvasHeight); // 实际渲染像素
+            canvas.style.width = `${canvasWidth}px`; // 控制显示大小
+            canvas.style.height = `${canvasHeight}px`; // 控制显示大小
+            const keyboard = document.getElementById('keyboard');
+            keyboard.style.width = canvas.style.width
+
+            // 通过判断getContext方法是否存在来判断浏览器的支持性
+            // console.log({ innerWidth: window.innerWidth, canvasWidth, canvasHeight });
+            // 获取绘图上下文
+            context = canvas.getContext('2d');
+            context.scale(ratio, ratio);
+        }
+        const normalFontSize = rem(12);
+        const paddingLeft = rem(2);
+        const paddingTop = rem(3);
+        const inputRectPadding = rem(2);
+        const verticalComputePaddingLeft = rem(2);
+        const verticalComputePaddingTop = rem(5);
+        const normalFontStyle = `${normalFontSize}px Arial`;
+        // 进位标识
+        const flagFontStyle = `${rem(8)}px Arial`;
+        // 绘制表达式
+        const drawExpression = (number, drawPosition) => {
+            // 完整表达式大小
+            const completeExpressionMetrics = context.measureText(`${number.a} + ${number.b} = ${number.a + number.b}`);
+            // 移动到居中位置
+            context.translate((canvasWidth - completeExpressionMetrics.width) / 2, 0);
+            context.textAlign = "left";
+            const expression = `${number.a} + ${number.b} = `;
+            const answer = `${number.a + number.b}`;
+            const textMetrics = context.measureText(expression);
+            const expressionWidth = textMetrics.width;
+            const expressionHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+            context.fillText(expression, paddingLeft, paddingTop + expressionHeight);
+
+            console.log('canvas textMetrics', textMetrics, { context, expression, answer, paddingLeft, expressionHeight, paddingTop, normalFontSize });
+
+            let charRectX = paddingLeft + expressionWidth;
+            let partAnswer = '';
+            for (let i = 0; i < answer.length; i++) {
+                const char = answer.charAt(i);
+                const charMetrics = context.measureText(char);
+                context.strokeRect(charRectX, paddingTop - inputRectPadding, charMetrics.width, expressionHeight + 2 * inputRectPadding);
+                if (number.c.length > i) {
+                    const numberCChar = number.c.charAt(i);
+                    partAnswer += numberCChar;
+                    context.save();
+                    if (answer.startsWith(partAnswer)) {
+                        context.fillStyle = 'green';
+                    } else {
+                        context.fillStyle = 'red';
+                    }
+                    context.fillText(numberCChar, charRectX, paddingTop + expressionHeight);
+                    context.restore();
+                }
+                charRectX += charMetrics.width + inputRectPadding;
+            }
+            drawPosition.y = paddingTop + expressionHeight;
+            // context.fillRect(10, normalFontSize, 100, 100);
+            console.log('draw', `${number.a} + ${number.b} = ${number.c}`);
+        }
+        // 绘制竖式计算步骤
+        const drawVerticalComputeStep = (number, isAdd, step, drawPosition) => {
+            context.textAlign = "right";
+
+            // 第一行数字a
+            const numberA = `${number.a}`.split('').join(' ');;
+            const numberAMetrics = context.measureText(numberA);
+            const numberAWidth = numberAMetrics.width;
+            const numberAHeight = numberAMetrics.actualBoundingBoxAscent + numberAMetrics.actualBoundingBoxDescent;
+
+            // 第二行 +数字b，b前面用空格填充，使得是a和b长度最长数字
+            const buildFillSpace = (a, b) => {
+                const length = `${number.a}`.length - `${number.b}`.length;
+                if (length > 0) {
+                    return ' '.repeat(length);
+                }
+                return '';
+            };
+            const numberB = `+${buildFillSpace(number.a, number.b)}${number.b}`.split('').join(' ');;
+            const numberBMetrics = context.measureText(numberB);
+            const numberBWidth = numberBMetrics.width;
+            const numberBHeight = numberBMetrics.actualBoundingBoxAscent + numberBMetrics.actualBoundingBoxDescent;
+
+            // 第三行正确结果
+            const answer = `${number.a + number.b}`.split('').join(' ');;
+            const answerMetrics = context.measureText(answer);
+            const answerWidth = answerMetrics.width;
+            const answerHeight = answerMetrics.actualBoundingBoxAscent + answerMetrics.actualBoundingBoxDescent;
+            // 绘制
+            const maxWidth = numberBWidth;
+            // 移动到居中位置
+            context.translate((canvasWidth - maxWidth) / 2, 0);
+            drawPosition.x = maxWidth + verticalComputePaddingLeft;
+            // 第一行数字a，减法处理借位
+            drawPosition.y += 3 * verticalComputePaddingTop;
+            context.fillText(numberA, drawPosition.x, drawPosition.y + numberAHeight);
+            // 第二行 +数字b，加法处理进位
+            drawPosition.y += verticalComputePaddingTop + numberAHeight;
+            if (number.flags[step]) {
+                // 红色 1 进位标记
+                context.save();
+                const partNumberB = numberB.slice(-step * 2 + 1);
+                const partNumberBWidth = context.measureText(partNumberB).width;
+                const x = drawPosition.x - partNumberBWidth;
+                context.fillStyle = 'red';
+                context.font = flagFontStyle;
+                const flag = '1';
+                console.log('partNumberB', { partNumberB, flags: number.flags, step, x, drawPositionX: drawPosition.x, partNumberBWidth })
+                context.fillText(flag, x, drawPosition.y + answerHeight);
+                context.restore();
+            }
+            context.fillText(numberB, drawPosition.x, drawPosition.y + numberBHeight);
+            // 横线
+            drawPosition.y += verticalComputePaddingTop + numberBHeight;
+            context.beginPath(); // Start a new path
+            context.moveTo(verticalComputePaddingLeft, drawPosition.y); // Move the pen to (30, 50)
+            context.lineTo(verticalComputePaddingLeft + maxWidth, drawPosition.y); // Draw a line to (150, 100)
+            context.stroke(); // Render the path
+            // 第三行结果
+            drawPosition.y += verticalComputePaddingTop;
+            const partAnswer = `${number.a + number.b}`.split('').reduce((acc, value, index, array) => {
+                if (index < array.length - step) {
+                    return `${acc} _`;
+                } else {
+                    return `${acc} ${value}`;
+                }
+            }, '');
+            console.log('partAnswer', { step, partAnswer, length: answer.length, answer })
+            context.fillText(partAnswer, drawPosition.x, drawPosition.y + answerHeight);
+            // 截取数据覆盖一层，确保数字是绿色的，第一步是黑色"_ 3"，第二步是绿色"  3"，产生黑色"_"绿色"3"
+            context.fillStyle = 'green';
+            context.fillText(partAnswer.replaceAll('_', ' '), drawPosition.x, drawPosition.y + answerHeight);
+        }
+        const draw = (number, isAdd, step = 0) => {
+            console.log('SSU draw', { number, isAdd, step });
+            if (!context) {
+                console.error('canvas context 为空');
+                return;
+            }
+            // 清空画板
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.font = normalFontStyle;
+            context.fillStyle = 'black';
+            const drawPosition = {
+                x: paddingLeft,
+                y: paddingTop,
+            };
+            context.save();
+            drawExpression(number, drawPosition);
+            context.restore();
+            context.save();
+            drawVerticalComputeStep(number, isAdd, step, drawPosition);
+            context.restore();
+        }
+    </script>
+
+    <script>
+        const { createApp, ref, reactive, computed, watch, onMounted, nextTick } = Vue;
+        createApp({
+            setup() {
+                addEventListener("DOMContentLoaded", (event) => {
+                });
+                const produceLimitNumArray = (limitNum, isAdd) => {
+                    // limit Num 以内加法，a + b 情况是 a 或 b 都可以是 0 ～ limitNum，故总数是 (limitNum + 1) * (limitNum + 1)
+                    // limit Num 以内减法，a - b 情况是 a 或 b 都可以是 0 ～ limitNum 且 a >= b，故总数是 ((limitNum + 1) * (limitNum + 1) - (limitNum + 1)) / 2 + (limitNum + 1)
+                    const limitNumArray = [];
+                    if (isAdd) {
+                        limitNumArray.length = (limitNum + 1) * (limitNum + 1);
+                    } else {
+                        limitNumArray.length = ((limitNum + 1) * (limitNum + 2)) / 2;
+                    }
+                    return limitNumArray;
+                }
+                const produceRandomInt = (limit) => {
+                    return Math.floor(Math.random() * (limit));
+                }
+
+                const limitNum = ref(20);
+                const isAdd = ref(true);
+                const scoreStr = ref('');
+
+                const questionDoneCount = ref(0);
+                const questionTotalCount = ref(20);
+
+                const forwardDisabled = ref(false);
+                const hasNext = computed(() => limitNumArray.value.some(item => !item));
+                const number = reactive({
+                    a: '', b: '', c: ''
+                });
+
+                const next = () => {
+                    let randomInt = produceRandomInt(limitNumArray.value.length);
+                    while (limitNumArray.value[randomInt]) {
+                        randomInt = (randomInt + 1) % limitNumArray.value.length;
+                    }
+                    number.a = randomInt % limitNum.value;
+                    number.b = Math.floor(randomInt / limitNum.value);
+                    number.flags = `${number.a + number.b}`.split('').reduce((acc, val, index, array) => {
+                        const numAPart = `${number.a}`.slice(-index - 1);
+                        const numBPart = `${number.b}`.slice(-index - 1);
+                        const sum = `${(+numAPart) + (+numBPart)}`;
+                        // 标记进位，避免 7 + 8 第二位也判断进位
+                        acc[array.length - index - 1] = (numAPart.length > index && numBPart.length > index && sum.length > Math.max(numAPart.length, numBPart.length));
+                        console.log('number.flags', { sum, numA: number.a, numAPart, numB: number.b, numBPart, acc, curIndex: (sum.length - index - 1), val, index, flag: acc[index] });
+                        return acc;
+                    }, []);
+                    number.c = '';
+                    console.log('next', number, { draw, randomInt, length: limitNumArray.value.length, limitNum: limitNum.value });
+                    draw(number, isAdd.value);
+                }
+
+                const refresh = () => {
+                    document.title = `${limitNum.value}以内${isAdd.value ? '进位加法' : '退位减法'}`;
+                    console.log('SSU refreshTitle', document.title);
+                    next();
+                };
+                // watch(limitNum, refresh);
+                // watch(isAdd, refresh);
+                const limitNumArray = computed(() => produceLimitNumArray(limitNum.value, isAdd.value));
+
+                let step = 0;
+
+                const warnToast = (msg) => {
+                    // 参考开源轻量级toast https://www.npmjs.com/package/autolog.js
+                    ((text, type = "", time = 2500) => {
+                        const cssStr = `#autolog{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none;width:100vw;height:100vh;position:fixed;left:0;top:.32rem;z-index:9999999;cursor:pointer;transition:0.2s}#autolog span{pointer-events:auto;width:max-content;animation:fadein 0.4s;animation-delay:0s;border-radius:6px;padding:10px 20px;box-shadow:0 0 10px 6px rgba(0,0,0,0.1);margin:4px;transition:0.2s;z-index:9999999;font-size: .32rem;display:flex;align-items:center;justify-content:center;gap:4px;height:max-content}#autolog span.hide{opacity:0;pointer-events:none;transform:translateY(-10px);height:0;padding:0;margin:0}.autolog-warn{background-color:#fffaec;color:#e29505}.autolog-error{background-color:#fde7e7;color:#d93025}.autolog-info{background-color:#e6f7ff;color:#0e6eb8}.autolog-success{background-color:#e9f7e7;color:#1a9e2c}.autolog-{background-color:#fafafa;color:#333}@keyframes fadein{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:translateY(0)}}`;
+                        const svgIcons = {
+                            warn: `<svg t="1713405237257" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2387" xmlns:xlink="http://www.w3.org/1999/xlink" width=".32rem" height=".32rem"><path d="M934.4 770.133333L605.866667 181.333333C586.666667 147.2 550.4 128 512 128c-38.4 0-74.666667 21.333333-93.866667 53.333333L89.6 770.133333c-19.2 34.133333-19.2 76.8 0 110.933334S145.066667 938.666667 183.466667 938.666667h657.066666c38.4 0 74.666667-21.333333 93.866667-57.6 19.2-34.133333 19.2-76.8 0-110.933334z m-55.466667 81.066667c-8.533333 14.933333-23.466667 23.466667-38.4 23.466667H183.466667c-14.933333 0-29.866667-8.533333-38.4-23.466667-8.533333-14.933333-8.533333-34.133333 0-49.066667L473.6 213.333333c8.533333-12.8 23.466667-21.333333 38.4-21.333333s29.866667 8.533333 38.4 21.333333l328.533333 588.8c8.533333 14.933333 8.533333 32 0 49.066667z" fill="#e29505" p-id="2388"></path><path d="M512 746.666667m-42.666667 0a42.666667 42.666667 0 1 0 85.333334 0 42.666667 42.666667 0 1 0-85.333334 0Z" fill="#e29505" p-id="2389"></path><path d="M512 629.333333c17.066667 0 32-14.933333 32-32v-192c0-17.066667-14.933333-32-32-32s-32 14.933333-32 32v192c0 17.066667 14.933333 32 32 32z" fill="#e29505" p-id="2390"></path></svg>`,
+                            error: `<svg t="1713405212725" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" xmlns:xlink="http://www.w3.org/1999/xlink" width=".32rem" height=".32rem"><path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666c-204.8 0-373.333333-168.533333-373.333333-373.333333S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" fill="#d93025" p-id="1745"></path><path d="M657.066667 360.533333c-12.8-12.8-32-12.8-44.8 0l-102.4 102.4-102.4-102.4c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l102.4 102.4-102.4 102.4c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.933333 8.533333 23.466666 8.533334s17.066667-2.133333 23.466667-8.533334l102.4-102.4 102.4 102.4c6.4 6.4 14.933333 8.533333 23.466667 8.533334s17.066667-2.133333 23.466666-8.533334c12.8-12.8 12.8-32 0-44.8l-106.666666-100.266666 102.4-102.4c12.8-12.8 12.8-34.133333 0-46.933334z" fill="#d93025" p-id="1746"></path></svg>`,
+                            info: `<svg t="1713405208589" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1582" xmlns:xlink="http://www.w3.org/1999/xlink" width=".32rem" height=".32rem"><path d="M853.333333 138.666667H170.666667c-40.533333 0-74.666667 34.133333-74.666667 74.666666v512c0 40.533333 34.133333 74.666667 74.666667 74.666667h151.466666V917.333333c0 12.8 8.533333 25.6 19.2 29.866667 4.266667 2.133333 8.533333 2.133333 12.8 2.133333 8.533333 0 17.066667-4.266667 23.466667-10.666666l136.533333-138.666667H853.333333c40.533333 0 74.666667-34.133333 74.666667-74.666667V213.333333c0-40.533333-34.133333-74.666667-74.666667-74.666666z m10.666667 586.666666c0 6.4-4.266667 10.666667-10.666667 10.666667H501.333333c-8.533333 0-17.066667 4.266667-23.466666 10.666667l-89.6 93.866666V768c0-17.066667-14.933333-32-32-32H170.666667c-6.4 0-10.666667-4.266667-10.666667-10.666667V213.333333c0-6.4 4.266667-10.666667 10.666667-10.666666h682.666666c6.4 0 10.666667 4.266667 10.666667 10.666666v512z" fill="#0e6eb8" p-id="1583"></path><path d="M512 490.666667H298.666667c-17.066667 0-32 14.933333-32 32S281.6 554.666667 298.666667 554.666667h213.333333c17.066667 0 32-14.933333 32-32S529.066667 490.666667 512 490.666667zM672 341.333333H298.666667c-17.066667 0-32 14.933333-32 32S281.6 405.333333 298.666667 405.333333h373.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32z" fill="#0e6eb8" p-id="1584"></path></svg>`,
+                            success: `<svg t="1713405224326" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2225" xmlns:xlink="http://www.w3.org/1999/xlink" width=".32rem" height=".32rem"><path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666c-204.8 0-373.333333-168.533333-373.333333-373.333333S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" fill="#1a9e2c" p-id="2226"></path><path d="M701.866667 381.866667L448 637.866667 322.133333 512c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l149.333334 149.333333c6.4 6.4 14.933333 8.533333 23.466666 8.533334s17.066667-2.133333 23.466667-8.533334l277.333333-277.333333c12.8-12.8 12.8-32 0-44.8-14.933333-12.8-36.266667-12.8-49.066666-2.133333z" fill="#1a9e2c" p-id="2227"></path></svg>`,
+                            "": "",
+                        };
+                        const autolog = {
+                            log(text, type = "", time = 2500) {
+                                if (typeof type === "number") {
+                                    time = type;
+                                    type = "";
+                                }
+                                let mainEl = getMainElement();
+                                let el = document.createElement("span");
+                                el.className = `autolog-${type}`;
+                                el.innerHTML = svgIcons[type] + text;
+                                mainEl.appendChild(el);
+                                setTimeout(() => {
+                                    el.classList.add("hide");
+                                }, time - 500);
+                                setTimeout(() => {
+                                    mainEl.removeChild(el);
+                                    el = null;
+                                }, time);
+                            },
+                        };
+                        function getMainElement() {
+                            let mainEl = document.querySelector("#autolog");
+                            if (!mainEl) {
+                                mainEl = document.createElement("div");
+                                mainEl.id = "autolog";
+                                document.body.appendChild(mainEl);
+                                let style = document.createElement("style");
+                                style.innerHTML = cssStr;
+                                document.head.insertBefore(style, document.head.firstChild);
+                            }
+                            return mainEl;
+                        }
+
+                        autolog.log(text, type, time);
+                    })(msg, 'warn');
+                };
+                const onKeyClick = (key) => {
+                    console.log('SSU onKeyClick', key);
+                    if (key === 'backspace') {
+                        // 删除键
+                        number.c = number.c.slice(0, -1);
+                        draw(number, isAdd.value);
+                    } else if (key === 'forward') {
+                        if (`${number.c}`.length < `${number.a + number.b}`.length) {
+                            warnToast('请先填写答案');
+                            return;
+                        }
+                        // 下一题
+                        const totalStep = `${number.a + number.b}`.length;
+                        const isRight = (number.a + number.b === +number.c);
+                        if (step === 0) {
+                            scoreStr.value += isRight ? '✅' : '❌';
+                            questionDoneCount.value++;
+                            if (questionDoneCount.value === questionTotalCount.value) {
+                                showSetting();
+                            }
+                        }
+
+                        console.log('forward', { step, totalStep });
+
+                        const doAnim = () => {
+                            draw(number, isAdd.value, ++step);
+                            if (step > totalStep) {
+                                // 重置
+                                step = 0;
+                                forwardDisabled.value = false;
+                                next();
+                            } else {
+                                if (isRight) {
+                                    forwardDisabled.value = true;
+                                    setTimeout(doAnim, 1000);
+                                }
+                            }
+                        };
+                        doAnim();
+                    } else {
+                        number.c += key;
+                        forwardDisabled.value = (`${number.c}`.length !== `${number.a + number.b}`.length);
+                        draw(number, isAdd.value);
+                    }
+                }
+                // 位数有效才能继续按数字键
+                const keyDisabled = computed(() => (number.c.length >= `${number.a + number.b}`.length));
+
+                const startBombTiming = (limitTime) => {
+                    const box = document.querySelector("#flame_box");
+                    function addFlame() {
+                        var f = document.createElement("div");
+                        f.className = "flame";
+                        f.style.left = Math.random() * 100 + "%";
+                        f.style.animationDuration = Math.random() < 0.5 ? "3s" : "1.5s";
+                        f.onanimationend = function () {
+                            f.remove();
+                        };
+                        box.appendChild(f);
+                    }
+
+                    const TimeStep = 1000 / 12;
+                    let lastTime = limitTime;
+
+                    const buildBombTime = (time) => {
+                        let timeHtml;
+                        if (time > 0) {
+                            const mm = Math.floor(time / 60 / 1000).toString().padStart(2, '0');
+                            const ss = Math.floor(time % 60000 / 1000).toString().padStart(2, '0');
+                            const ms = Math.floor(time % 1000).toString().padStart(3, '0');
+                            timeHtml = `<div class="bomb-mm">${mm}</div><div class="bomb-colon">:</div><div class="bomb-ss">${ss}</div><div class="bomb-colon">:</div><div class="bomb-ms">${ms}</div>`;
+                        } else {
+                            timeHtml = '💥💥💥';
+                        }
+                        // console.log('SSU buildBombTime', timeHtml);
+                        return timeHtml;
+                    }
+
+                    const intervalID = setInterval(function () {
+                        addFlame();
+                        const timeHtml = buildBombTime(lastTime);
+                        if (lastTime > TimeStep) {
+                            lastTime -= TimeStep;
+                        } else {
+                            clearInterval(intervalID);
+                            showSetting();
+                        }
+                        document.querySelector("#time").innerHTML = `${timeHtml}`;
+                    }, TimeStep);
+                }
+                const showSetting = async () => {
+                    scoreStr.value = '';
+                    const result = await Swal.fire({
+                        title: "请选择运算类型和范围",
+                        input: "select",
+                        inputValue: 'add20',
+                        inputOptions: {
+                            '进位加法': {
+                                add20: "20内进位加法",
+                                add50: "50内进位加法",
+                                add80: "80内进位加法",
+                                add100: "100内进位加法",
+                            },
+                            '退位减法': {
+                                sub20: "20内退位减法",
+                                sub50: "50内退位减法",
+                                sub80: "80内退位减法",
+                                sub100: "100内退位减法",
+                            }
+                        },
+                        inputPlaceholder: "请选择",
+                        showCancelButton: true
+                    });
+                    switch (result) {
+                        case 'add20':
+                            limitNum.value = 20;
+                            isAdd.value = true;
+                            break;
+                        case 'add50':
+                            limitNum.value = 50;
+                            isAdd.value = true;
+                            break;
+                        case 'add80':
+                            limitNum.value = 80;
+                            isAdd.value = true;
+                            break;
+                        case 'add100':
+                            limitNum.value = 100;
+                            isAdd.value = true;
+                            break;
+                        case 'sub20':
+                            limitNum.value = 20;
+                            isAdd.value = false;
+                            break;
+                        case 'sub50':
+                            limitNum.value = 50;
+                            isAdd.value = false;
+                            break;
+                        case 'sub80':
+                            limitNum.value = 80;
+                            isAdd.value = false;
+                            break;
+                        case 'sub100':
+                            limitNum.value = 100;
+                            isAdd.value = false;
+                            break;
+                    }
+                    questionTotalCount.value = 20;
+                    questionDoneCount.value = 0;
+                    console.log('SSU showSetting', result);
+                    startBombTiming(2 * 60 * 1000);
+                    refresh();
+                }
+                onMounted(() => {
+                    initCanvas();
+                    showSetting();
+                });
+                return {
+                    limitNum,
+                    isAdd,
+                    scoreStr,
+                    questionDoneCount,
+                    questionTotalCount,
+                    keyDisabled,
+                    forwardDisabled,
+                    onKeyClick
+                };
+            }
+        }).mount("#app");
+    </script>
+</body>
+
+</html>

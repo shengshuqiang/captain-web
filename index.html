@@ -1,10 +1,58 @@
-<!DOCTYPE html>
+<!-- https://talos.sankuai.com/vendor/fep/index.html -->
+<!-- http://awp.meituan.com/hfe/fep/e76082421c3843e1935bd77411ac5d5a.html -->
+<!-- http://awp-assets.meituan.net/hfe/fep/211e3ae8ae3f479bb866e449917436f3.css -->
+<!-- http://awp-assets.meituan.net/hfe/fep/3a2b82e812934b048f5f359ca4260c58.js -->
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      href="https://p0.meituan.net/mallimages/383c4d27b00999e6de7db2c01a02146690474.png"
+      type="image/x-icon"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>船长</title>
+    <style>
+      html {
+        /* 设置rem基准单位，相对于 750px 宽度手机 */
+        font-size: calc(100vw / 7.5);
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        margin: 0;
+      }
+      .swal2-popup {
+        /* swal2 里面通过 em 设置大小，必须重置回去 */
+        font-size: 16px !important;
+      }
+      /* 图标素材 https://fonts.google.com/icons */
+      @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        /* src: url(https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2)
+          format('woff2'); */
+        src: url(/src/assets/materialicons.woff2) format('woff2');
+      }
+      .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 0.24rem;
+        line-height: 0.01rem;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+    <!-- <script src="/src/utils/sweetalert2.js"></script> -->
   </head>
   <body>
     <div id="app"></div>
