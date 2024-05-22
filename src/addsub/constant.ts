@@ -16,7 +16,7 @@ export interface QuestionRadioKeyValueObj {
     [key: string]: number,
 }
 export const QUESTION_RADIO_KEY_VALUE_OBJ: QuestionRadioKeyValueObj = {
-    'question-20': 20,
+    'question-20': 2,
     'question-50': 50,
     'question-100': 100,
 }
@@ -54,6 +54,7 @@ export interface QuestionsData {
     // 答题记录
     answerRecords: Answer[],
     // 得分信息
+    scoreTitle: string,
     scoreDesc: string,
     // 键盘➡️是否可点击，数字输入完成才可以点
     forwardDisabled: boolean,
@@ -66,16 +67,5 @@ export interface UseQuestion {
     next: () => void,
     resetSetting: (settingData: SettingData) => void,
     handleKeyBoard: (key: string, setting: () => void) => void,
-}
-/**
- * 绘画信息
- */
-export interface DrawInfo {
-    numA: number | '';
-    numB: number | '';
-    numAnswer: number | '';
-    numC: number | '';
-    numFlags: boolean[];
-    isAdd: boolean;
-    step: number;
+    handleRecord: (answer: Answer) => void,
 }

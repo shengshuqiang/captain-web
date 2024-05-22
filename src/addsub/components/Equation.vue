@@ -5,8 +5,7 @@
 
 <script setup lang="ts">
 import { watch, onMounted, ref } from 'vue';
-import { rem } from '../utils/utils';
-import { DrawInfo } from '../constant';
+import { rem } from '../../utils/utils';
 
 const props = defineProps({
     isAdd: Boolean,
@@ -141,25 +140,35 @@ const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd,
     context.fillText(numAStr, drawPosition.x, drawPosition.y + numAStrHeight);
     // 第二行 +数字b，加法处理进位
     drawPosition.y += verticalComputeItemPaddingTop + numAStrHeight;
-    if (numFlags[step]) {
-        // 红色 1 进位标记
-        context.save();
-        const partNumberB = numBStr.slice(-step * 2 + 1);
-        const partNumberBWidth = context.measureText(partNumberB).width;
-        const x = drawPosition.x - partNumberBWidth;
-        context.fillStyle = 'red';
-        context.font = flagFontStyle;
-        const flag = '1';
-        console.log('partNumberB', {
-            partNumberB,
-            flags: numFlags,
-            step,
-            x,
-            drawPositionX: drawPosition.x,
-            partNumberBWidth
-        });
-        context.fillText(flag, x, drawPosition.y + answerHeight);
-        context.restore();
+    const drawFlag = step => {
+        if (numFlags[step]) {
+            // 红色 1 进位标记
+            context.save();
+            const partNumberB = numBStr.slice(-step * 2 + 1);
+            const partNumberBWidth = context.measureText(partNumberB).width;
+            const x = drawPosition.x - partNumberBWidth;
+            context.fillStyle = 'red';
+            context.font = flagFontStyle;
+            const flag = '1';
+            console.log('partNumberB', {
+                partNumberB,
+                flags: numFlags,
+                step,
+                x,
+                drawPositionX: drawPosition.x,
+                partNumberBWidth
+            });
+            context.fillText(flag, x, drawPosition.y + answerHeight);
+            context.restore();
+        }
+    };
+    if (step === Number.MAX_VALUE) {
+        const allStep = `${numAnswer}`.length;
+        for (let stepIndex = 0; stepIndex < allStep; stepIndex++) {
+            drawFlag(stepIndex);
+        }
+    } else {
+        drawFlag(step);
     }
     context.fillText(numBStr, drawPosition.x, drawPosition.y + numBStrHeight);
     // 横线
@@ -170,13 +179,18 @@ const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd,
     context.stroke(); // Render the path
     // 第三行结果
     drawPosition.y += verticalComputeItemPaddingTop;
-    const partAnswer: string = `${numA + numB}`.split('').reduce((acc, value, index, array) => {
-        if (index < array.length - step) {
-            return `${acc} _`;
-        } else {
-            return `${acc} ${value}`;
-        }
-    }, '');
+    let partAnswer: string = null;
+    if (step === Number.MAX_VALUE) {
+        partAnswer = `${numAnswer}`.split('').join(' ');
+    } else {
+        partAnswer = `${numAnswer}`.split('').reduce((acc, value, index, array) => {
+            if (index < array.length - step) {
+                return `${acc} _`;
+            } else {
+                return `${acc} ${value}`;
+            }
+        }, '');
+    }
     console.log('partAnswer', { step, partAnswer, length: answerText.length, answerText });
     context.fillText(partAnswer, drawPosition.x, drawPosition.y + answerHeight);
     // 截取数据覆盖一层，确保数字是绿色的，第一步是黑色"_ 3"，第二步是绿色"  3"，产生黑色"_"绿色"3"
