@@ -3,9 +3,9 @@
     <div class="board">
         <button
             v-for="(answerRecord, index) in answerRecords"
-            :class="['answer', answerRecord.isRight ? 'right' : 'wrong']"
+            :class="['answer', answerRecord.isRight ? 'right' : 'wrong', data.selectedIndex === index ? 'selected' : '']"
             :key="index"
-            @click="onRecordClick(answerRecord)"
+            @click="onRecordClick(answerRecord, index)"
         >
             {{ index + 1 }}
         </button>
@@ -13,16 +13,20 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from 'vue';
 import { Answer } from '../constant';
 
 defineProps({
     answerRecords: []
 });
-
+const data = reactive({
+    selectedIndex: 0
+});
 const emit = defineEmits(['onRecordClick']);
-const onRecordClick = (key: string) => {
-    console.log('SSU onRecordClick', key);
-    emit('onRecordClick', key);
+const onRecordClick = (answerRecord: Answer, index) => {
+    data.selectedIndex = index;
+    console.log('SSU onRecordClick', answerRecord);
+    emit('onRecordClick', answerRecord);
 };
 </script>
 
@@ -48,15 +52,16 @@ const onRecordClick = (key: string) => {
 }
 
 .right {
-    color: white;
     background-color: green;
     border-radius: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5 / 2);
     border-color: green;
 }
 .wrong {
-    color: white;
     background-color: red;
     border-radius: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5 / 2);
     border-color: red;
+}
+.selected {
+    border: 0.08rem solid blue;
 }
 </style>

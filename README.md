@@ -37,3 +37,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### vitest
+
+自动化测试工具 https://cn.vitest.dev/guide/

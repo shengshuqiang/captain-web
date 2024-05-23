@@ -1,11 +1,15 @@
 <!-- 算式绘制组件 -->
 <template>
-    <canvas id="canvas" ref="canvas"> 当前浏览器不支持canvas元素，请升级或更换浏览器！ </canvas>
+    <canvas
+        id="canvas"
+        ref="canvas"
+    >
+        当前浏览器不支持canvas元素，请升级或更换浏览器！
+    </canvas>
 </template>
 
 <script setup lang="ts">
 import { watch, onMounted, ref } from 'vue';
-import { rem } from '../../utils/utils';
 
 const props = defineProps({
     isAdd: Boolean,
@@ -44,7 +48,7 @@ const verticalComputeItemPaddingLeft = rem(0.05);
 const verticalComputeItemPaddingTop = rem(0.2);
 const normalFontStyle = `${normalFontSize}px Arial`;
 // 进位标识
-const flagFontStyle = `${rem(0.2)}px Arial`;
+const flagFontStyle = `bold ${rem(0.3)}px Arial`;
 // 绘制表达式
 // TODO 减法
 const drawExpression = ({ numA, numB, numAnswer, numC, isAdd }, drawPosition) => {
@@ -106,11 +110,9 @@ const drawExpression = ({ numA, numB, numAnswer, numC, isAdd }, drawPosition) =>
 // 绘制竖式计算步骤
 const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd, step }, drawPosition) => {
     context.textAlign = 'right';
-
     // 第一行数字a
     const numAStr = `${numA}`.split('').join(' ');
     const numAStrMetrics = context.measureText(numAStr);
-    const numberAWidth = numAStrMetrics.width;
     const numAStrHeight = numAStrMetrics.actualBoundingBoxAscent + numAStrMetrics.actualBoundingBoxDescent;
 
     // 第二行 +数字b，b前面用空格填充，使得是a和b长度最长数字
@@ -197,7 +199,7 @@ const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd,
     context.fillStyle = 'green';
     context.fillText(partAnswer.replaceAll('_', ' '), drawPosition.x, drawPosition.y + answerHeight);
 };
-const draw = ({ numA, numB, numAnswer, numC, numFlags, isAdd, step = 0 }: DrawInfo) => {
+const draw = ({ numA, numB, numAnswer, numC, numFlags, isAdd, step = 0 }) => {
     console.log('SSU draw', { numA, numB, numC, numFlags, isAdd, step });
     if (!context) {
         console.error('canvas context 为空');
@@ -212,7 +214,7 @@ const draw = ({ numA, numB, numAnswer, numC, numFlags, isAdd, step = 0 }: DrawIn
         y: paddingTop
     };
     context.save();
-    drawExpression({ numA, numB, numAnswer, numC, numFlags, isAdd }, drawPosition);
+    drawExpression({ numA, numB, numAnswer, numC, isAdd }, drawPosition);
     context.restore();
     context.save();
     drawVerticalComputeStep({ numA, numB, numAnswer, numC, numFlags, isAdd, step }, drawPosition);

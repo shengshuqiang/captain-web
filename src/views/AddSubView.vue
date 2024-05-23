@@ -1,14 +1,30 @@
 <template>
     <div class="content">
         <div class="bomb-score-group">
-            <Bomb :bombTiming="data.bombTiming" :limitTime="settingData.limitTime" @click="onClickBomb" />
+            <Bomb
+                v-model="bombData.remainingTime"
+                :bombTiming="bombData.bombTiming"
+                @click="onClickBomb"
+                @fire="onBombFire"
+            />
             <div class="score-group">
                 <div class="score-title">{{ questionData.scoreTitle }}</div>
-                <div class="score-desc" v-html="questionData.scoreDesc"></div>
+                <div
+                    class="score-desc"
+                    v-html="questionData.scoreDesc"
+                ></div>
             </div>
         </div>
-        <Equation :answer="questionData.answer" :isAdd="settingData.isAdd" :step="questionData.step" />
-        <ScoreBoard v-if="isFinished" :answerRecords="questionData.answerRecords" @onRecordClick="onRecordClick" />
+        <Equation
+            :answer="questionData.answer"
+            :isAdd="settingData.isAdd"
+            :step="questionData.step"
+        />
+        <ScoreBoard
+            v-if="questionData.finished"
+            :answerRecords="questionData.answerRecords"
+            @onRecordClick="onRecordClick"
+        />
         <KeyBoard
             v-else
             :forwardDisabled="questionData.forwardDisabled"
@@ -27,36 +43,24 @@ import Equation from '../addsub/components/Equation.vue';
 import KeyBoard from '../addsub/components/KeyBoard.vue';
 import { useQuestion } from '../addsub/useQuestionComposables';
 import { useSetting } from '../addsub/useSettingComposables';
-import { UseSetting, UseQuestion, Answer } from '../addsub/constant';
+import { UseSetting, UseQuestion, Answer, BombTimingData } from '../addsub/constant';
 
-const data = reactive({
-    bombTiming: false
+const bombData = reactive<BombTimingData>({
+    bombTiming: false,
+    remainingTime: 0
 });
-const newGame = () => {
-    data.bombTiming = true;
-    document.title = `${settingData.numberRange}以内${settingData.isAdd ? '进位加法' : '退位减法'}`;
-    resetSetting(settingData);
-    const hasNextResult = hasNext();
-    if (hasNextResult) {
-        next();
-    }
-    console.log('SSU newGame', { settingData, hasNextResult });
-};
-const continueGame = () => {
-    data.bombTiming = true;
-};
-const { data: settingData, show: showSetting }: UseSetting = useSetting(newGame, continueGame);
-const { data: questionData, hasNext, next, resetSetting, handleKeyBoard, handleRecord }: UseQuestion = useQuestion();
+const { settingData, show: showSetting }: UseSetting = useSetting();
+const { questionData, hasNext, next, handleKeyBoard, handleRecord }: UseQuestion = useQuestion(settingData, bombData);
 const setting = () => {
-    data.bombTiming = false;
+    bombData.bombTiming = false;
     showSetting();
 };
 onMounted(() => {
-    data.bombTiming = false;
+    bombData.bombTiming = false;
     setting();
 });
 const onClickBomb = () => {
-    data.bombTiming = false;
+    bombData.bombTiming = false;
     setting();
 };
 console.log('SSU App.vue', { settingData, questionData });
@@ -67,7 +71,39 @@ const onKeyClick = (key: string) => {
 const onRecordClick = (answerRecord: Answer) => {
     handleRecord(answerRecord);
 };
-const isFinished = computed(() => !data.bombTiming || questionData.totalCount === questionData.answerRecords.length);
+watch(
+    () => settingData.reset,
+    reset => {
+        console.log('SSU watch settingData.reset', reset);
+        if (reset) {
+            // 重新开始游戏
+            bombData.bombTiming = true;
+            document.title = `${settingData.numberRange}以内${settingData.isAdd ? '进位加法' : '退位减法'}`;
+            bombData.remainingTime = settingData.limitTime;
+            const hasNextResult = hasNext();
+            if (hasNextResult) {
+                next();
+            }
+            console.log('SSU newGame', { settingData, hasNextResult });
+        } else {
+            bombData.bombTiming = true;
+        }
+    }
+);
+watch(
+    () => questionData.finished,
+    finished => {
+        console.log('SSU watch finished', finished);
+        handleRecord(questionData.answerRecords[0]);
+        if (finished) {
+            bombData.bombTiming = false;
+        }
+    }
+);
+const onBombFire = () => {
+    // 时间到
+    questionData.finished = true;
+};
 </script>
 
 <style scoped>
