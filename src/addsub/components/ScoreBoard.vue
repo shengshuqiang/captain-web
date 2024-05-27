@@ -9,6 +9,12 @@
         >
             {{ index + 1 }}
         </button>
+        <div
+            class="zero-score"
+            v-if="!answerRecords.length"
+        >
+            零分空白卷
+        </div>
     </div>
 </template>
 
@@ -63,5 +69,11 @@ const onRecordClick = (answerRecord: Answer, index) => {
 }
 .selected {
     border: 0.08rem solid blue;
+}
+.zero-score {
+    width: 100%;
+    text-align: center;
+    font-size: 0.64rem;
+    color: red;
 }
 </style>

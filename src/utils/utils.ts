@@ -1,5 +1,89 @@
-
 import Swal from 'sweetalert2';
+
+export const buildRem = () => {
+    const remSize = window.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const ratio = 100 / remSize;
+    console.log({ ratio, devicePixelRatio: window.devicePixelRatio, remSize });
+    const rem = (num: number) => num * remSize;
+    return rem;
+};
+
+/**
+ * 将 num 转换为每位数字数组，如 99 => [9, 9]
+ * @param num
+ * @returns
+ */
+const buildNumArr = (num: number): number[] => {
+    if (Number.isInteger(num)) {
+        const numArr = [];
+        while (num > 0) {
+            numArr.push(num % 10);
+            num = Math.floor(num / 10);
+        }
+        return numArr;
+    }
+    console.error('不支持小数');
+    return [];
+};
+/**
+ * numA + numB 进位数组
+ * 99 + 1 返回 [false, true, true]
+ * @param numA
+ * @param numB
+ * @returns
+ */
+export const addABFlags = (numA: number, numB: number) => {
+    const numAArr = buildNumArr(numA);
+    const numBArr = buildNumArr(numB);
+    const maxLength = Math.max(numAArr.length, numBArr.length);
+
+    // 第一位不会进位，拿false占位
+    const flags = [false];
+    let partNumA = 0;
+    let partNumB = 0;
+    let partMax = 1;
+    for (let index = 0; index < maxLength; index++) {
+        partNumA += (index < numAArr.length ? numAArr[index] : 0) * partMax;
+        partNumB += (index < numBArr.length ? numBArr[index] : 0) * partMax;
+        partMax *= 10;
+        if (partNumA + partNumB >= partMax) {
+            flags.push(true);
+        } else {
+            flags.push(false);
+        }
+    }
+    console.log('SSU addABFlags', { numAArr, numBArr, maxLength, flags });
+    return flags;
+};
+
+/**
+ * numA - numB 退位
+ * 100 - 1 返回 [false, true, true, false]
+ * @param numA
+ * @param numB
+ */
+export const subABFlags = (numA: number, numB: number) => {
+    const numAArr = buildNumArr(numA);
+    const numBArr = buildNumArr(numB);
+    // 第一位不会借位，拿false占位
+    const flags = [false];
+    let partNumA = 0;
+    let partNumB = 0;
+    let partMax = 1;
+    for (let index = 0; index < numAArr.length; index++) {
+        partNumA += numAArr[index] * partMax;
+        partNumB += (index < numBArr.length ? numBArr[index] : 0) * partMax;
+        partMax *= 10;
+        console.log('SSU subABFlags', { index, partNumA, partNumB, aGb: partNumA - partNumB });
+        if (partNumA - partNumB < 0) {
+            flags.push(true);
+        } else {
+            flags.push(false);
+        }
+    }
+    console.log('SSU subABFlags', { numAArr, numBArr, flags });
+    return flags;
+};
 
 export const ToastDialog = Swal.mixin({
     toast: true,
@@ -7,32 +91,32 @@ export const ToastDialog = Swal.mixin({
     showConfirmButton: false,
     timer: 1000,
     timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
+    didOpen: toast => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
     }
-  });
+});
 export const toast = (msg: string) => {
     ToastDialog.fire({
-        icon: "warning",
+        icon: 'warning',
         title: msg
     });
-}
+};
 
 /**
  * 获取 numberRange 以内加法算式
  * a + b 均可取值 0, 1, ... numberRange 共 (numberRange + 1) 个数
- * @param numberRange 
- * @param index 
- * @returns 
+ * @param numberRange
+ * @param index
+ * @returns
  */
 export const getAddABEquation = (numberRange: number) => ({
-  // 算式总数
-  count: (numberRange + 1) * (numberRange + 1),
-  getABByIndex: (index: number) => ({
-    numA: index % (numberRange + 1),
-    numB: Math.floor(index / (numberRange + 1))
-  })
+    // 算式总数
+    count: (numberRange + 1) * (numberRange + 1),
+    getABByIndex: (index: number) => ({
+        numA: index % (numberRange + 1),
+        numB: Math.floor(index / (numberRange + 1))
+    })
 });
 
 /**
@@ -41,36 +125,35 @@ export const getAddABEquation = (numberRange: number) => ({
  * @returns
  */
 export const produceRandomInt = (limit: number) => {
-  return Math.floor(Math.random() * limit);
-}
+    return Math.floor(Math.random() * limit);
+};
 /**
  * 获取 numberRange 以内减法算式
- * @param numberRange 
- * @param index 
- * @returns 
+ * @param numberRange
+ * @param index
+ * @returns
  */
 export const getSubABEquation = (numberRange: number) => ({
-  // 算式总数，a - b 均可取值 0, 1, ... n 且 a >= b，总个数对应 1 到 (n + 1) 的等差数列，共 (1 + (n + 1)) * (n + 1) 个数
-  count:  (1 + (numberRange + 1)) * (numberRange + 1) / 2,
-  getABByIndex: (index: number) => {
-    // (1 + n) * n / 2 = x, 求解得 n = Math.sqrt(2 * x + 1/4) - 1/2
-    const n = Math.sqrt(2 * index + 1/4) - 1/2;
-    let numA, numB;
-    if (Number.isInteger(n)) {
-      numA = n;
-      numB = n;
-    } else {
-      const m = Math.floor(n);
-      numA = m + 1;
-      numB = index - (1 + m) * m / 2;
+    // 算式总数，a - b 均可取值 0, 1, ... n 且 a >= b，总个数对应 1 到 (n + 1) 的等差数列，共 (1 + (n + 1)) * (n + 1) 个数
+    count: ((1 + (numberRange + 1)) * (numberRange + 1)) / 2,
+    getABByIndex: (index: number) => {
+        // (1 + n) * n / 2 = x, 求解得 n = Math.sqrt(2 * x + 1/4) - 1/2
+        const n = Math.sqrt(2 * index + 1 / 4) - 1 / 2;
+        let numA, numB;
+        if (Number.isInteger(n)) {
+            numA = n;
+            numB = n;
+        } else {
+            const m = Math.floor(n);
+            numA = m + 1;
+            numB = index - ((1 + m) * m) / 2;
+        }
+        return {
+            numA,
+            numB
+        };
     }
-    return {
-      numA,
-      numB
-    }
-  }
 });
-
 
 // export const toast = (msg: string) => {
 //   // 参考开源轻量级toast https://www.npmjs.com/package/autolog.js
@@ -119,4 +202,3 @@ export const getSubABEquation = (numberRange: number) => ({
 //     autolog.log(text, type, time)
 //   })(msg, 'warn')
 // }
-

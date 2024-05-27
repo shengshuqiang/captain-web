@@ -10,7 +10,9 @@
 
 <script setup lang="ts">
 import { watch, onMounted, ref } from 'vue';
+import { buildRem } from '../../utils/utils';
 
+const rem = buildRem();
 const props = defineProps({
     isAdd: Boolean,
     step: Number,
@@ -48,16 +50,20 @@ const verticalComputeItemPaddingLeft = rem(0.05);
 const verticalComputeItemPaddingTop = rem(0.2);
 const normalFontStyle = `${normalFontSize}px Arial`;
 // 进位标识
-const flagFontStyle = `bold ${rem(0.3)}px Arial`;
+const addFlagFontStyle = `bold ${rem(0.3)}px Arial`;
+// 退位标识
+const subFlagFontStyle = `bold ${rem(0.2)}px Arial`;
+const subFlagPadding = rem(0.08);
+const lineWidth = rem(0.05);
+const linePadding = rem(0.08);
 // 绘制表达式
-// TODO 减法
 const drawExpression = ({ numA, numB, numAnswer, numC, isAdd }, drawPosition) => {
     // 完整表达式大小
-    const completeExpressionMetrics = context.measureText(`${numA} + ${numB} = ${numA + numB}`);
+    const completeExpressionMetrics = context.measureText(`${numA} ${isAdd ? '+' : '-'} ${numB} = ${numA + numB}`);
     // 移动到居中位置
     context.translate((canvasWidth - completeExpressionMetrics.width) / 2, 0);
     context.textAlign = 'left';
-    const expression = `${numA} + ${numB} = `;
+    const expression = `${numA} ${isAdd ? '+' : '-'} ${numB} = `;
     const textMetrics = context.measureText(expression);
     const expressionWidth = textMetrics.width;
     const expressionHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
@@ -123,7 +129,7 @@ const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd,
         }
         return '';
     };
-    const numBStr = `+${buildFillSpace(numA, numB)}${numB}`.split('').join(' ');
+    const numBStr = `${isAdd ? '+' : '-'}${buildFillSpace(numA, numB)}${numB}`.split('').join(' ');
     const numBStrMetrics = context.measureText(numBStr);
     const numBStrWidth = numBStrMetrics.width;
     const numBStrHeight = numBStrMetrics.actualBoundingBoxAscent + numBStrMetrics.actualBoundingBoxDescent;
@@ -136,49 +142,88 @@ const drawVerticalComputeStep = ({ numA, numB, numC, numAnswer, numFlags, isAdd,
     const maxWidth = numBStrWidth;
     // 移动到居中位置
     context.translate((canvasWidth - maxWidth) / 2, 0);
+    // 绘制进位/退位标记
+    const drawSingleFlag = step => {
+        if (numFlags[step]) {
+            context.save();
+            if (isAdd) {
+                // 第二行红色 1 进位标记
+                const partNumberB = numBStr.slice(-step * 2 + 1);
+                const partNumberBWidth = context.measureText(partNumberB).width;
+                const x = drawPosition.x - partNumberBWidth;
+                context.fillStyle = 'red';
+                context.font = addFlagFontStyle;
+                const flag = '1';
+                console.log('partNumberB', {
+                    partNumberB,
+                    flags: numFlags,
+                    step,
+                    x,
+                    drawPositionX: drawPosition.x,
+                    partNumberBWidth
+                });
+                context.fillText(flag, x, drawPosition.y + answerHeight);
+            } else {
+                // 第一行黑色 · 借位标记
+                const partNumberA = numAStr.slice(-step * 2 + 1);
+                // 进位是打在高位上面
+                const partNumberAPlus = numAStr.slice(-(step + 1) * 2 + 1);
+                const partNumberAPlusWidth = context.measureText(partNumberAPlus).width;
+                let x = drawPosition.x - partNumberAPlusWidth + context.measureText(partNumberAPlus.charAt(0)).width / 2;
+                const flag = '●';
+                context.fillStyle = 'black';
+                context.font = subFlagFontStyle;
+                x += context.measureText(flag).width / 2;
+
+                console.log('partNumberA', {
+                    partNumberA,
+                    flags: numFlags,
+                    step,
+                    x,
+                    drawPositionX: drawPosition.x,
+                    partNumberAPlus,
+                    partNumberAPlusWidth
+                });
+                context.fillText(flag, x, drawPosition.y - subFlagPadding);
+            }
+            context.restore();
+        }
+    };
+    const drawFlag = () => {
+        if (step === Number.MAX_VALUE) {
+            const allStep = numFlags.length;
+            for (let stepIndex = 0; stepIndex < allStep; stepIndex++) {
+                drawSingleFlag(stepIndex);
+            }
+        } else {
+            drawSingleFlag(step);
+        }
+    };
+
     drawPosition.x = maxWidth + verticalComputeItemPaddingLeft;
     // 第一行数字a，减法处理借位，
     drawPosition.y += verticalComputeMarginTop;
     context.fillText(numAStr, drawPosition.x, drawPosition.y + numAStrHeight);
+    if (!isAdd) {
+        // 第一行顶部绘制退位标记
+        drawFlag();
+    }
     // 第二行 +数字b，加法处理进位
     drawPosition.y += verticalComputeItemPaddingTop + numAStrHeight;
-    const drawFlag = step => {
-        if (numFlags[step]) {
-            // 红色 1 进位标记
-            context.save();
-            const partNumberB = numBStr.slice(-step * 2 + 1);
-            const partNumberBWidth = context.measureText(partNumberB).width;
-            const x = drawPosition.x - partNumberBWidth;
-            context.fillStyle = 'red';
-            context.font = flagFontStyle;
-            const flag = '1';
-            console.log('partNumberB', {
-                partNumberB,
-                flags: numFlags,
-                step,
-                x,
-                drawPositionX: drawPosition.x,
-                partNumberBWidth
-            });
-            context.fillText(flag, x, drawPosition.y + answerHeight);
-            context.restore();
-        }
-    };
-    if (step === Number.MAX_VALUE) {
-        const allStep = `${numAnswer}`.length;
-        for (let stepIndex = 0; stepIndex < allStep; stepIndex++) {
-            drawFlag(stepIndex);
-        }
-    } else {
-        drawFlag(step);
-    }
     context.fillText(numBStr, drawPosition.x, drawPosition.y + numBStrHeight);
+    if (isAdd) {
+        // 第二行顶部绘制进位标记
+        drawFlag();
+    }
     // 横线
+    context.save();
     drawPosition.y += verticalComputeItemPaddingTop + numBStrHeight;
     context.beginPath(); // Start a new path
-    context.moveTo(verticalComputeItemPaddingLeft, drawPosition.y); // Move the pen to (30, 50)
-    context.lineTo(verticalComputeItemPaddingLeft + maxWidth, drawPosition.y); // Draw a line to (150, 100)
+    context.lineWidth = rem(0.05);
+    context.moveTo(verticalComputeItemPaddingLeft - linePadding, drawPosition.y); // Move the pen to (30, 50)
+    context.lineTo(verticalComputeItemPaddingLeft + maxWidth + linePadding, drawPosition.y); // Draw a line to (150, 100)
     context.stroke(); // Render the path
+    context.restore();
     // 第三行结果
     drawPosition.y += verticalComputeItemPaddingTop;
     let partAnswer: string = null;

@@ -9,7 +9,7 @@ export const useSetting = (): UseSetting => {
         questionCount: 20,
         reset: false
     });
-    const show = () => {
+    const showSetting = () => {
         Swal.fire({
             icon: 'info',
             title: '请选择运算类型和范围',
@@ -86,7 +86,8 @@ export const useSetting = (): UseSetting => {
             }
         }).then(result => {
             settingData.reset = result.isConfirmed;
+            console.log('SSU Swal.fire confirmed', settingData.reset);
         });
     };
-    return { show, settingData };
+    return { showSetting, settingData };
 };

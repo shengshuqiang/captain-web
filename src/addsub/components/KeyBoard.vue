@@ -39,7 +39,6 @@ const onKeyClick = (key: string) => {
     width: calc((100vw - 1rem - 0.1rem * 2 * 4 - 0.1rem * 2) / 4);
     height: 1rem;
     font-size: 0.48rem;
-    font-weight: bold;
     margin: 0.1rem;
 }
 

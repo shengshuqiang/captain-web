@@ -29,7 +29,7 @@ export interface SettingData {
 }
 export interface UseSetting {
     settingData: SettingData;
-    show: () => void;
+    showSetting: () => void;
 }
 
 export interface Answer {

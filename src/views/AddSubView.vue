@@ -8,7 +8,7 @@
                 @fire="onBombFire"
             />
             <div class="score-group">
-                <div class="score-title">{{ questionData.scoreTitle }}</div>
+                <div :class="{ 'score-title': true, 'score-title-finished': questionData.finished }">{{ questionData.scoreTitle }}</div>
                 <div
                     class="score-desc"
                     v-html="questionData.scoreDesc"
@@ -49,7 +49,7 @@ const bombData = reactive<BombTimingData>({
     bombTiming: false,
     remainingTime: 0
 });
-const { settingData, show: showSetting }: UseSetting = useSetting();
+const { settingData, showSetting }: UseSetting = useSetting();
 const { questionData, hasNext, next, handleKeyBoard, handleRecord }: UseQuestion = useQuestion(settingData, bombData);
 const setting = () => {
     bombData.bombTiming = false;
@@ -85,6 +85,8 @@ watch(
                 next();
             }
             console.log('SSU newGame', { settingData, hasNextResult });
+            // TODO 重复设置true不会触发watch，所以要重置回去
+            settingData.reset = false;
         } else {
             bombData.bombTiming = true;
         }
@@ -113,7 +115,7 @@ const onBombFire = () => {
     align-items: center;
 }
 .bomb-score-group {
-    width: calc(100vw - 1rem);
+    width: 6.5rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -126,7 +128,11 @@ const onBombFire = () => {
     font-size: 0.48rem;
     font-family: Bold;
 }
+.score-title-finished {
+    color: red;
+}
 .score-desc {
+    width: 2.5rem;
     word-break: break-all;
     font-size: 0.32rem;
     margin-top: 0.1rem;

@@ -1,7 +1,7 @@
 import { reactive, computed, watch } from 'vue';
 import { toast } from '../utils/utils';
 import { type SettingData, type Answer, type UseQuestion, type QuestionsData, type BombTimingData } from './constant';
-import { getAddABEquation, getSubABEquation, produceRandomInt } from '../utils/utils';
+import { getAddABEquation, getSubABEquation, produceRandomInt, addABFlags, subABFlags } from '../utils/utils';
 
 /**
  * 问题集组合式函数
@@ -35,7 +35,6 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
         scoreTitle: '',
         backspaceDisabled: true,
         forwardDisabled: true,
-        keyDisabled: false,
         numDisabled: false,
         finished: false
     });
@@ -59,6 +58,9 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
                 questionData.scoreTitle = `0/${settingData.questionCount}`;
                 questionData.scoreDesc = buildScoreDesc(settingData.questionCount, questionData.answerRecords);
                 questionData.finished = false;
+                questionData.backspaceDisabled = true;
+                questionData.forwardDisabled = true;
+                questionData.numDisabled = false;
             }
         }
     );
@@ -79,48 +81,11 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
         if (settingData.isAdd) {
             questionData.answer.numAnswer = questionData.answer.numA + questionData.answer.numB;
             // 加法进位
-            questionData.answer.numFlags = `${questionData.answer.numAnswer}`.split('').reduce((acc: boolean[], val, index, array) => {
-                const numAPart = `${questionData.answer.numA}`.slice(-index - 1);
-                const numBPart = `${questionData.answer.numB}`.slice(-index - 1);
-                const sum = `${+numAPart + +numBPart}`;
-                // 标记进位，避免 7 + 8 第二位也判断进位
-                acc[array.length - index - 1] = numAPart.length > index && numBPart.length > index && sum.length > Math.max(numAPart.length, numBPart.length);
-                console.log('number.flags', {
-                    sum,
-                    numA: questionData.answer.numA,
-                    numAPart,
-                    numB: questionData.answer.numB,
-                    numBPart,
-                    acc,
-                    curIndex: sum.length - index - 1,
-                    val,
-                    index,
-                    flag: acc[index]
-                });
-                return acc;
-            }, []);
+            questionData.answer.numFlags = addABFlags(questionData.answer.numA, questionData.answer.numB);
         } else {
             questionData.answer.numAnswer = questionData.answer.numA - questionData.answer.numB;
             // 减法退位
-            questionData.answer.numFlags = `${questionData.answer.numAnswer}`.split('').reduce((acc: boolean[], val, index, array) => {
-                const numAPart = `${questionData.answer.numA}`.slice(-index - 1);
-                const numBPart = `${questionData.answer.numB}`.slice(-index - 1);
-                const sum: number = +numAPart - +numBPart;
-                // 标记退位
-                acc[array.length - index - 1] = numAPart.length > index && numBPart.length > index && sum < 0;
-                console.log('number.flags', {
-                    sum,
-                    numA: questionData.answer.numA,
-                    numAPart,
-                    numB: questionData.answer.numB,
-                    numBPart,
-                    acc,
-                    val,
-                    index,
-                    flag: acc[index]
-                });
-                return acc;
-            }, []);
+            questionData.answer.numFlags = subABFlags(questionData.answer.numA, questionData.answer.numB);
         }
         questionData.answer.numC = '';
         questionData.answer.time = bombTimingData.remainingTime;
