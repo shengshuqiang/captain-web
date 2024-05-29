@@ -8,13 +8,26 @@
                 @fire="onBombFire"
             />
             <div class="score-group">
-                <div :class="{ 'score-title': true, 'score-title-finished': questionData.finished }">{{ questionData.scoreTitle }}</div>
+                <div :class="{ 'score-title': true, 'score-title-finished': questionData.finished }">
+                    {{ questionData.scoreTitle }}
+                    <div
+                        v-if="questionData.finished"
+                        class="score-time"
+                    >
+                        {{ buildWorkTime() }}
+                    </div>
+                </div>
+
                 <div
                     class="score-desc"
                     v-html="questionData.scoreDesc"
                 ></div>
             </div>
         </div>
+        <BombAnim
+            class="bomb-anim"
+            v-model="bombData.bombAnim"
+        />
         <Equation
             :answer="questionData.answer"
             :isAdd="settingData.isAdd"
@@ -34,19 +47,23 @@
         />
     </div>
 </template>
-
 <script setup lang="ts">
 import ScoreBoard from '../addsub/components/ScoreBoard.vue';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Bomb from '../addsub/components/Bomb.vue';
 import Equation from '../addsub/components/Equation.vue';
 import KeyBoard from '../addsub/components/KeyBoard.vue';
+import BombAnim from '../addsub/components/BombAnim.vue';
 import { useQuestion } from '../addsub/useQuestionComposables';
 import { useSetting } from '../addsub/useSettingComposables';
 import { UseSetting, UseQuestion, Answer, BombTimingData } from '../addsub/constant';
+import { deconstructTime } from '../utils/utils';
+
+// TODO 增加分享功能 // https://juejin.cn/post/6844903825589927944
 
 const bombData = reactive<BombTimingData>({
     bombTiming: false,
+    bombAnim: false,
     remainingTime: 0
 });
 const { settingData, showSetting }: UseSetting = useSetting();
@@ -96,15 +113,21 @@ watch(
     () => questionData.finished,
     finished => {
         console.log('SSU watch finished', finished);
-        handleRecord(questionData.answerRecords[0]);
         if (finished) {
             bombData.bombTiming = false;
+            bombData.bombAnim = true;
+            handleRecord(questionData.answerRecords[0]);
         }
     }
 );
 const onBombFire = () => {
     // 时间到
     questionData.finished = true;
+};
+
+const buildWorkTime = () => {
+    const { mm, ss, ms } = deconstructTime(settingData.limitTime - bombData.remainingTime);
+    return `${mm}'${ss}''`;
 };
 </script>
 
@@ -113,6 +136,14 @@ const onBombFire = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+}
+.bomb-anim {
+    position: absolute;
+    background-color: gray;
+    opacity: 0.95;
+    width: 100vw;
+    height: 100vh;
 }
 .bomb-score-group {
     width: 6.5rem;
@@ -125,8 +156,16 @@ const onBombFire = () => {
     margin-left: 0.35rem;
 }
 .score-title {
+    display: flex;
+    align-items: flex-end;
     font-size: 0.48rem;
     font-family: Bold;
+}
+.score-time {
+    font-size: 0.42rem;
+    font-family: Bold;
+    color: blue;
+    margin-left: 0.15rem;
 }
 .score-title-finished {
     color: red;

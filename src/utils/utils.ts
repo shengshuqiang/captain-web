@@ -9,6 +9,23 @@ export const buildRem = () => {
 };
 
 /**
+ * 时间戳解构位{mm, ss, ms}
+ * @param time
+ */
+export const deconstructTime = (time: number) => {
+    const mm = Math.floor(time / 60 / 1000)
+        .toString()
+        .padStart(2, '0');
+    const ss = Math.floor((time % 60000) / 1000)
+        .toString()
+        .padStart(2, '0');
+    const ms = Math.floor(time % 1000)
+        .toString()
+        .padStart(3, '0');
+    return { mm, ss, ms };
+};
+
+/**
  * 将 num 转换为每位数字数组，如 99 => [9, 9]
  * @param num
  * @returns

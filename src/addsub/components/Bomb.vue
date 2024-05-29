@@ -227,6 +227,7 @@
 </template>
 
 <script setup lang="ts">
+import { deconstructTime } from '../../utils/utils';
 const remainingTime = defineModel<number>();
 
 import { ref, watch } from 'vue';
@@ -243,15 +244,7 @@ const flameBox = ref();
 const buildBombTime = (time: number) => {
     let timeHtml;
     if (time > 0) {
-        const mm = Math.floor(time / 60 / 1000)
-            .toString()
-            .padStart(2, '0');
-        const ss = Math.floor((time % 60000) / 1000)
-            .toString()
-            .padStart(2, '0');
-        const ms = Math.floor(time % 1000)
-            .toString()
-            .padStart(3, '0');
+        const { mm, ss, ms } = deconstructTime(time);
         timeHtml = `<div class="bomb-mm">${mm}</div><div class="bomb-colon">:</div><div class="bomb-ss">${ss}</div><div class="bomb-colon">:</div><div class="bomb-ms">${ms}</div>`;
     } else {
         timeHtml = '💥💥💥';

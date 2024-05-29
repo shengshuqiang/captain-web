@@ -54,6 +54,7 @@ const addFlagFontStyle = `bold ${rem(0.3)}px Arial`;
 // 退位标识
 const subFlagFontStyle = `bold ${rem(0.2)}px Arial`;
 const subFlagPadding = rem(0.08);
+// 算式分割线宽度和左右延长
 const lineWidth = rem(0.05);
 const linePadding = rem(0.08);
 // 绘制表达式

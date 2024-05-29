@@ -76,5 +76,6 @@ export interface UseQuestion {
 // 炸弹数据
 export interface BombTimingData {
     bombTiming: boolean;
+    bombAnim: boolean;
     remainingTime: number;
 }
