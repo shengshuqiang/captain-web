@@ -1,228 +1,230 @@
-<!-- 倒计时炸弹组件 -->
+<!-- 倒计时炸弹组件 https://www.17sucai.com/pins/47889.html -->
 <template>
-    <div id="bomb">
-        <div
-            ref="flameBox"
-            class="flame-box"
-        >
+    <div class="bomb-box">
+        <div id="bomb">
             <div
-                class="flame"
-                style="left: 5.51829%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 96.6102%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 15.1658%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 2.8373%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 18.9427%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 88.4761%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 0.589229%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 58.5504%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 33.5581%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 97.37%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 92.6273%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 61.413%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 6.12189%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 99.4008%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 30.3578%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 11.3331%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 6.81252%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 59.029%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 64.9899%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 46.6782%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 50.9622%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 31.195%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 11.1689%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 65.7699%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 20.1845%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 25.9775%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 60.517%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 20.666%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 35.5009%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 65.0609%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 48.0905%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 2.23943%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 43.8782%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 89.7532%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 58.5036%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 46.0519%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 44.8408%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 61.2655%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 58.8717%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 16.0905%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 64.6442%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 42.2755%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 23.6023%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 78.2061%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 28.9879%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 2.92948%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 68.5972%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 76.9592%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 4.74382%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 92.5846%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 70.9769%; animation-duration: 1.5s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 70.664%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 24.9397%; animation-duration: 3s"
-            ></div>
-            <div
-                class="flame"
-                style="left: 97.841%; animation-duration: 3s"
-            ></div>
+                ref="flameBox"
+                class="flame-box"
+            >
+                <div
+                    class="flame"
+                    style="left: 5.51829%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 96.6102%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 15.1658%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 2.8373%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 18.9427%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 88.4761%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 0.589229%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 58.5504%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 33.5581%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 97.37%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 92.6273%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 61.413%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 6.12189%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 99.4008%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 30.3578%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 11.3331%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 6.81252%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 59.029%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 64.9899%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 46.6782%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 50.9622%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 31.195%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 11.1689%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 65.7699%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 20.1845%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 25.9775%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 60.517%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 20.666%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 35.5009%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 65.0609%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 48.0905%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 2.23943%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 43.8782%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 89.7532%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 58.5036%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 46.0519%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 44.8408%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 61.2655%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 58.8717%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 16.0905%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 64.6442%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 42.2755%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 23.6023%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 78.2061%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 28.9879%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 2.92948%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 68.5972%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 76.9592%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 4.74382%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 92.5846%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 70.9769%; animation-duration: 1.5s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 70.664%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 24.9397%; animation-duration: 3s"
+                ></div>
+                <div
+                    class="flame"
+                    style="left: 97.841%; animation-duration: 3s"
+                ></div>
+            </div>
+            <div id="time"></div>
         </div>
-        <div id="time"></div>
     </div>
 </template>
 
@@ -318,7 +320,26 @@ watch(timeHtml, timeHtml => {
     width: 1.2rem;
     text-align: center;
 }
-
+.bomb-box {
+    width: 3rem;
+    height: 3rem;
+    padding: 0.3rem;
+    margin-top: 0.8rem;
+    position: relative;
+}
+.bomb-box::after {
+    content: '';
+    width: 3rem;
+    height: 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    left: 0.35rem;
+    bottom: 0.28rem;
+    border-radius: 50%;
+    transform: translate(-25%, 25%);
+    filter: blur(0.07rem);
+    z-index: -1;
+}
 .bomb-colon {
     padding-bottom: 0.1rem;
     text-align: center;
@@ -335,8 +356,6 @@ watch(timeHtml, timeHtml => {
 #bomb {
     width: 3rem;
     height: 3rem;
-    padding: 0.3rem;
-    margin-top: 0.8rem;
     border-radius: 50%;
     background: radial-gradient(circle at 66% 33%, #555, black 50%);
     position: relative;
@@ -345,7 +364,7 @@ watch(timeHtml, timeHtml => {
     box-shadow: -0.05rem 0.05rem 0.15rem rgba(0, 0, 0, 0.5);
 }
 
-#bomb:before {
+#bomb::before {
     content: '';
     width: 0.1rem;
     height: 1rem;
@@ -359,7 +378,7 @@ watch(timeHtml, timeHtml => {
     z-index: -1;
 }
 
-#bomb:after {
+#bomb::after {
     content: '';
     width: 1rem;
     height: 1rem;

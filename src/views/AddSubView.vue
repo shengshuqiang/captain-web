@@ -1,6 +1,9 @@
 <template>
     <div class="content">
-        <div class="bomb-score-group">
+        <div
+            v-if="!questionData.finished"
+            class="bomb-score-group"
+        >
             <Bomb
                 v-model="bombData.remainingTime"
                 :bombTiming="bombData.bombTiming"
@@ -10,24 +13,25 @@
             <div class="score-group">
                 <div :class="{ 'score-title': true, 'score-title-finished': questionData.finished }">
                     {{ questionData.scoreTitle }}
-                    <div
-                        v-if="questionData.finished"
-                        class="score-time"
-                    >
-                        {{ buildWorkTime() }}
-                    </div>
                 </div>
-
                 <div
                     class="score-desc"
                     v-html="questionData.scoreDesc"
                 ></div>
             </div>
         </div>
-        <BombAnim
-            class="bomb-anim"
-            v-model="bombData.bombAnim"
+        <ReportCard
+            v-else
+            :showContent="!bombData.bombAnimShow && !bombData.fireworksShow"
+            :win="bombData.win"
+            :time="bombData.workTime"
+            :answerRecords="questionData.answerRecords"
+            @click="onClickBomb"
         />
+        <!-- 失败炸弹 -->
+        <BombAnim v-model="bombData.bombAnimShow" />
+        <!-- 成功烟花 -->
+        <Fireworks v-model="bombData.fireworksShow" />
         <Equation
             :answer="questionData.answer"
             :isAdd="settingData.isAdd"
@@ -49,25 +53,30 @@
 </template>
 <script setup lang="ts">
 import ScoreBoard from '../addsub/components/ScoreBoard.vue';
+import ReportCard from '../addsub/components/ReportCard.vue';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Bomb from '../addsub/components/Bomb.vue';
 import Equation from '../addsub/components/Equation.vue';
 import KeyBoard from '../addsub/components/KeyBoard.vue';
+import Fireworks from '../addsub/components/Fireworks.vue';
 import BombAnim from '../addsub/components/BombAnim.vue';
 import { useQuestion } from '../addsub/useQuestionComposables';
 import { useSetting } from '../addsub/useSettingComposables';
 import { UseSetting, UseQuestion, Answer, BombTimingData } from '../addsub/constant';
-import { deconstructTime } from '../utils/utils';
 
 // TODO 增加分享功能 // https://juejin.cn/post/6844903825589927944
 
 const bombData = reactive<BombTimingData>({
     bombTiming: false,
     bombAnim: false,
-    remainingTime: 0
+    remainingTime: 0,
+    workTime: 0,
+    bombAnimShow: false,
+    fireworksShow: false,
+    win: false
 });
 const { settingData, showSetting }: UseSetting = useSetting();
-const { questionData, hasNext, next, handleKeyBoard, handleRecord }: UseQuestion = useQuestion(settingData, bombData);
+const { questionData, hasNext, next, handleKeyBoard, handleRecord, completeEmptyAnswer }: UseQuestion = useQuestion(settingData, bombData);
 const setting = () => {
     bombData.bombTiming = false;
     showSetting();
@@ -79,6 +88,7 @@ onMounted(() => {
 const onClickBomb = () => {
     bombData.bombTiming = false;
     setting();
+    // questionData.finished = true;
 };
 console.log('SSU App.vue', { settingData, questionData });
 
@@ -97,6 +107,8 @@ watch(
             bombData.bombTiming = true;
             document.title = `${settingData.numberRange}以内${settingData.isAdd ? '进位加法' : '退位减法'}`;
             bombData.remainingTime = settingData.limitTime;
+            bombData.bombAnim = false;
+            questionData.finished = false;
             const hasNextResult = hasNext();
             if (hasNextResult) {
                 next();
@@ -117,17 +129,33 @@ watch(
             bombData.bombTiming = false;
             bombData.bombAnim = true;
             handleRecord(questionData.answerRecords[0]);
+            bombData.workTime = settingData.limitTime - bombData.remainingTime;
+
+            if (questionData.answerRecords.every(answerRecord => answerRecord.isRight)) {
+                bombData.win = true;
+                bombData.bombAnimShow = false;
+                bombData.fireworksShow = true;
+            } else {
+                bombData.win = false;
+                bombData.bombAnimShow = true;
+                bombData.fireworksShow = false;
+            }
         }
     }
 );
+
+watch(
+    () => questionData.answerRecords,
+    answerRecords => {
+        console.log('SSU answerRecords', answerRecords);
+    },
+    { deep: true }
+);
+
 const onBombFire = () => {
     // 时间到
     questionData.finished = true;
-};
-
-const buildWorkTime = () => {
-    const { mm, ss, ms } = deconstructTime(settingData.limitTime - bombData.remainingTime);
-    return `${mm}'${ss}''`;
+    completeEmptyAnswer();
 };
 </script>
 
@@ -137,13 +165,6 @@ const buildWorkTime = () => {
     flex-direction: column;
     align-items: center;
     position: relative;
-}
-.bomb-anim {
-    position: absolute;
-    background-color: gray;
-    opacity: 0.95;
-    width: 100vw;
-    height: 100vh;
 }
 .bomb-score-group {
     width: 6.5rem;
@@ -160,12 +181,6 @@ const buildWorkTime = () => {
     align-items: flex-end;
     font-size: 0.48rem;
     font-family: Bold;
-}
-.score-time {
-    font-size: 0.42rem;
-    font-family: Bold;
-    color: blue;
-    margin-left: 0.15rem;
 }
 .score-title-finished {
     color: red;

@@ -42,6 +42,7 @@ export interface Answer {
     numFlags: boolean[];
     // 是否正确
     isRight: boolean;
+    isModify: boolean;
     // 耗时
     time: number;
 }
@@ -71,6 +72,7 @@ export interface UseQuestion {
     next: () => void;
     handleKeyBoard: (key: string, setting: () => void) => void;
     handleRecord: (answer: Answer) => void;
+    completeEmptyAnswer: () => void;
 }
 
 // 炸弹数据
@@ -78,4 +80,8 @@ export interface BombTimingData {
     bombTiming: boolean;
     bombAnim: boolean;
     remainingTime: number;
+    workTime: number;
+    bombAnimShow: boolean;
+    fireworksShow: boolean;
+    win: boolean;
 }

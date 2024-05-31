@@ -2,9 +2,8 @@
 <template>
     <canvas
         v-show="bombing"
+        class="bomb-anim"
         id="c"
-        width="527"
-        height="150"
     ></canvas>
 </template>
 
@@ -85,13 +84,18 @@ function loadScene() {
     var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
     //     		 gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
 
+    const buildVec4Color = (color: number) => {
+        const colorStr = `${((color >> 16) & 0xff) / 255}, ${((color >> 8) & 0xff) / 255}, ${(color & 0xff) / 255}, 0.8`;
+        return colorStr;
+    };
     gl.shaderSource(
         fragmentShader,
+        // https://peiseka.com/
         `#ifdef GL_ES
 				  precision highp float;
 				  #endif
     		void main(void) {
-    		 gl_FragColor = vec4(0, 0, 0, 0.5);
+    		 gl_FragColor = vec4(${buildVec4Color(0x47467b)});
     		}`
     );
     gl.compileShader(fragmentShader);
@@ -485,8 +489,8 @@ function timer() {
     // drawType = (drawType + 1) % 3;
     drawType++;
     console.log('SSU timer', drawType);
-    if (drawType <= 2) {
-        setTimeout(timer, 1500);
+    if (drawType < 3) {
+        setTimeout(timer, drawType === 2 ? 300 : 1500);
     }
 }
 
@@ -499,4 +503,12 @@ watch(bombing, bombing => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.bomb-anim {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(#e68906, #1d2236);
+    opacity: 0.6;
+}
+</style>

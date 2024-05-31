@@ -3,7 +3,12 @@
     <div class="board">
         <button
             v-for="(answerRecord, index) in answerRecords"
-            :class="['answer', answerRecord.isRight ? 'right' : 'wrong', data.selectedIndex === index ? 'selected' : '']"
+            :class="[
+                'answer',
+                answerRecord.numC !== '' ? (answerRecord.isRight ? 'right' : 'wrong') : 'empty',
+                answerRecord.isModify ? 'modify' : '',
+                data.selectedIndex === index ? 'selected' : ''
+            ]"
             :key="index"
             @click="onRecordClick(answerRecord, index)"
         >
@@ -51,21 +56,29 @@ const onRecordClick = (answerRecord: Answer, index) => {
 .answer {
     width: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5);
     height: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5);
+    color: black;
     font-size: 0.48rem;
     font-weight: bold;
     margin: 0.1rem;
     border: none;
 }
-
 .right {
-    background-color: green;
+    background-color: #86ddb0;
     border-radius: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5 / 2);
-    border-color: green;
+    border-color: #86ddb0;
 }
 .wrong {
-    background-color: red;
+    background-color: #ff3b3e;
     border-radius: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5 / 2);
-    border-color: red;
+    border-color: #ff3b3e;
+}
+.empty {
+    background-color: #b1a7af;
+    border-radius: calc((100vw - 1rem - 0.1rem * 2 * 5 - 0.1rem * 2) / 5 / 2);
+    border-color: #b1a7af;
+}
+.modify {
+    color: #ffc925;
 }
 .selected {
     border: 0.08rem solid blue;

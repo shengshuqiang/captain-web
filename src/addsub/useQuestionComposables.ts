@@ -53,6 +53,7 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
                 questionData.answer.numC = '';
                 questionData.answer.numFlags.length = 0;
                 questionData.answer.isRight = false;
+                questionData.answer.isModify = false;
                 questionData.step = 0;
                 questionData.answerRecords.length = 0;
                 questionData.scoreTitle = `0/${settingData.questionCount}`;
@@ -88,6 +89,8 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
             questionData.answer.numFlags = subABFlags(questionData.answer.numA, questionData.answer.numB);
         }
         questionData.answer.numC = '';
+        questionData.answer.isModify = false;
+        questionData.answer.isRight = false;
         questionData.answer.time = bombTimingData.remainingTime;
         console.log('next', { randomInt, questionData: questionData });
     };
@@ -97,6 +100,8 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
             // 删除键
             const numCStr = `${questionData.answer.numC}`.slice(0, -1);
             questionData.answer.numC = numCStr.length ? +numCStr : '';
+            // 标记修改
+            questionData.answer.isModify = true;
             // 键盘状态
             // 输入完成才可以点击键盘下一步
             questionData.forwardDisabled = `${questionData.answer.numC}`.length !== `${questionData.answer.numAnswer}`.length;
@@ -182,5 +187,15 @@ export const useQuestion = (settingData: SettingData, bombTimingData: BombTiming
             bombTimingData.remainingTime = answerRecord.time;
         }
     };
-    return { questionData, hasNext, next, handleKeyBoard, handleRecord };
+    // 补全空记录
+    const completeEmptyAnswer = () => {
+        while (questionData.answerRecords.length < settingData.questionCount) {
+            next();
+            questionData.answerRecords.push({
+                ...questionData.answer,
+                numFlags: [...questionData.answer.numFlags]
+            });
+        }
+    };
+    return { questionData, hasNext, next, handleKeyBoard, handleRecord, completeEmptyAnswer };
 };
