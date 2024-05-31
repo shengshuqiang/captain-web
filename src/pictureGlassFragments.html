@@ -1,0 +1,211 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>html5图片玻璃碎片特效</title>
+    
+    <style class="cp-pen-styles">
+    body
+    {
+        background-color: #000;
+        margin: 0;
+        overflow: hidden;
+    }
+    
+    a
+    {
+        font-family: monospace;
+        color: #fff;
+        text-decoration: none;
+        background: #222;
+        padding: 4px 6px;
+        z-index: 100;
+    }
+    
+    canvas
+    {
+        position: absolute;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+    }
+    
+    #container
+    {
+        position: absolute;
+        width: 768px;
+        height: 485px;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+    }
+    
+    .hidden
+    {
+        position: absolute;
+        visibility: hidden;
+    }
+    </style>
+    </head>
+    <body>
+    
+    <img src="https://www.51qianduan.com/uploadfile/article/1806/18/4135/city_copy.jpg" id="src_img" class="hidden">
+    <div id="container" style="-webkit-perspective: 500px;"><canvas width="116" height="47" style="width: 116.873px; height: 47.1975px; transform: translate3d(651.127px, 437.803px, -27.7491px); opacity: 1;"></canvas><canvas width="116" height="110" style="width: 116.873px; height: 110.391px; transform: translate3d(651.127px, 374.609px, -49.2527px); opacity: 1;"></canvas><canvas width="57" height="67" style="width: 57.0924px; height: 67.3989px; transform: translate3d(710.908px, 370.404px, -37.7914px); opacity: 1;"></canvas><canvas width="57" height="69" style="width: 57.0924px; height: 69.6361px; transform: translate3d(710.908px, 304.973px, -68.5942px); opacity: 1;"></canvas><canvas width="107" height="84" style="width: 107.141px; height: 84.649px; transform: translate3d(660.859px, 289.96px, -42.8548px); opacity: 1;"></canvas><canvas width="110" height="82" style="width: 110.486px; height: 82.9443px; transform: translate3d(657.514px, 166.128px, -23.4296px); opacity: 1;"></canvas><canvas width="107" height="55" style="width: 107.141px; height: 55.9005px; transform: translate3d(660.859px, 249.072px, -81.6385px); opacity: 1;"></canvas><canvas width="110" height="42" style="width: 110.486px; height: 42.1812px; transform: translate3d(657.514px, 247.778px, -27.2887px); opacity: 1;"></canvas><canvas width="93" height="85" style="width: 93.1152px; height: 85.0352px; transform: translate3d(674.885px, 164.037px, -24.7853px); opacity: 1;"></canvas><canvas width="93" height="21" style="width: 93.1152px; height: 21.6178px; transform: translate3d(674.885px, 144.51px, -32.472px); opacity: 1;"></canvas><canvas width="84" height="19" style="width: 84.8471px; height: 19.5268px; transform: translate3d(683.153px, 144.51px, -65.7857px); opacity: 1;"></canvas><canvas width="84" height="76" style="width: 84.8471px; height: 76.2596px; transform: translate3d(683.153px, 69.5131px, -46.1135px); opacity: 1;"></canvas><canvas width="84" height="91" style="width: 84.8471px; height: 91.7026px; transform: translate3d(683.153px, 52.8074px, -31.0235px); opacity: 1;"></canvas><canvas width="75" height="69" style="width: 75.3273px; height: 69.5131px; transform: translate3d(692.673px, 0px, -31.5762px); opacity: 1;"></canvas><canvas width="108" height="52" style="width: 108.19px; height: 52.8074px; transform: translate3d(659.81px, 0px, -34.7728px); opacity: 1;"></canvas><canvas width="98" height="145" style="width: 98.7813px; height: 145.48px; transform: translate3d(562.078px, 289.96px, -38.5669px); opacity: 1;"></canvas><canvas width="76" height="145" style="width: 76.7972px; height: 145.48px; transform: translate3d(634.11px, 289.96px, -24.5471px); opacity: 1;"></canvas><canvas width="76" height="110" style="width: 76.7972px; height: 110.391px; transform: translate3d(634.11px, 374.609px, -27.0942px); opacity: 1;"></canvas><canvas width="52" height="81" style="width: 52.6413px; height: 81.6506px; transform: translate3d(622.243px, 166.128px, -27.5052px); opacity: 1;"></canvas><canvas width="116" height="52" style="width: 116.441px; height: 52.8074px; transform: translate3d(576.232px, 0px, -85.6298px); opacity: 1;"></canvas><canvas width="116" height="133" style="width: 116.441px; height: 133.719px; transform: translate3d(576.232px, 0px, -77.0344px); opacity: 1;"></canvas><canvas width="107" height="91" style="width: 107.49px; height: 91.7026px; transform: translate3d(585.183px, 52.8074px, -50.6727px); opacity: 1;"></canvas><canvas width="98" height="77" style="width: 98.7813px; height: 77.1965px; transform: translate3d(562.078px, 286.869px, -76.0448px); opacity: 1;"></canvas><canvas width="60" height="38" style="width: 60.9094px; height: 38.4405px; transform: translate3d(622.243px, 144.51px, -18.466px); opacity: 1;"></canvas><canvas width="97" height="49" style="width: 97.9704px; height: 49.2315px; transform: translate3d(585.183px, 133.719px, -27.3575px); opacity: 1;"></canvas><canvas width="44" height="133" style="width: 44.0784px; height: 133.719px; transform: translate3d(541.104px, 0px, -39.6537px); opacity: 1;"></canvas><canvas width="31" height="49" style="width: 31.2386px; height: 49.5602px; transform: translate3d(619.889px, 435.44px, -71.6015px); opacity: 1;"></canvas><canvas width="60" height="65" style="width: 60.3057px; height: 65.4127px; transform: translate3d(597.209px, 182.951px, -32.1744px); opacity: 1;"></canvas><canvas width="63" height="42" style="width: 63.6504px; height: 42.1812px; transform: translate3d(597.209px, 247.778px, -64.861px); opacity: 1;"></canvas><canvas width="77" height="41" style="width: 77.4378px; height: 41.5965px; transform: translate3d(583.421px, 248.363px, -36.6089px); opacity: 1;"></canvas><canvas width="107" height="37" style="width: 107.818px; height: 37.0002px; transform: translate3d(543.309px, 448px, -18.9338px); opacity: 1;"></canvas><canvas width="72" height="83" style="width: 72.0326px; height: 83.9338px; transform: translate3d(562.078px, 364.066px, -18.7986px); opacity: 1;"></canvas><canvas width="76" height="120" style="width: 76.5799px; height: 120.934px; transform: translate3d(543.309px, 364.066px, -70.1172px); opacity: 1;"></canvas><canvas width="37" height="114" style="width: 37.061px; height: 114.644px; transform: translate3d(585.183px, 133.719px, -20.4138px); opacity: 1;"></canvas><canvas width="80" height="115" style="width: 80.5488px; height: 115.518px; transform: translate3d(516.66px, 132.846px, -31.6506px); opacity: 1;"></canvas><canvas width="63" height="77" style="width: 63.1963px; height: 77.1965px; transform: translate3d(520.225px, 286.869px, -21.9641px); opacity: 1;"></canvas><canvas width="68" height="93" style="width: 68.5226px; height: 93.4382px; transform: translate3d(516.66px, 40.2808px, -57.6891px); opacity: 1;"></canvas><canvas width="90" height="38" style="width: 90.5331px; height: 38.5062px; transform: translate3d(506.676px, 248.363px, -79.0055px); opacity: 1;"></canvas><canvas width="90" height="124" style="width: 90.5331px; height: 124.23px; transform: translate3d(506.676px, 132.846px, -55.1128px); opacity: 1;"></canvas><canvas width="106" height="120" style="width: 106.007px; height: 120.934px; transform: translate3d(456.071px, 364.066px, -61.3968px); opacity: 1;"></canvas><canvas width="76" height="82" style="width: 76.7456px; height: 82.173px; transform: translate3d(506.676px, 257.075px, -78.4634px); opacity: 1;"></canvas><canvas width="87" height="40" style="width: 87.4107px; height: 40.2808px; transform: translate3d(488.821px, 0px, -40.4464px); opacity: 1;"></canvas><canvas width="67" height="124" style="width: 67.7218px; height: 124.23px; transform: translate3d(448.938px, 132.846px, -72.4962px); opacity: 1;"></canvas><canvas width="56" height="92" style="width: 56.5388px; height: 92.5648px; transform: translate3d(484.565px, 40.2808px, -58.3573px); opacity: 1;"></canvas><canvas width="106" height="63" style="width: 106.007px; height: 63.7831px; transform: translate3d(456.071px, 339.249px, -42.1602px); opacity: 1;"></canvas><canvas width="90" height="81" style="width: 90.09px; height: 81.9684px; transform: translate3d(453.219px, 403.032px, -82.0073px); opacity: 1;"></canvas><canvas width="56" height="58" style="width: 56.5388px; height: 58.8974px; transform: translate3d(484.565px, 0px, -80.7234px); opacity: 1;"></canvas><canvas width="67" height="101" style="width: 67.7218px; height: 101.649px; transform: translate3d(448.938px, 58.8974px, -21.3152px); opacity: 1;"></canvas><canvas width="83" height="82" style="width: 83.6831px; height: 82.173px; transform: translate3d(436.542px, 257.075px, -19.6622px); opacity: 1;"></canvas><canvas width="83" height="71" style="width: 83.6831px; height: 71.1109px; transform: translate3d(436.542px, 331.921px, -19.8586px); opacity: 1;"></canvas><canvas width="128" height="74" style="width: 128.314px; height: 74.8452px; transform: translate3d(378.362px, 257.075px, -22.5362px); opacity: 1;"></canvas><canvas width="96" height="96" style="width: 96.5276px; height: 96.5292px; transform: translate3d(410.148px, 160.546px, -85.7938px); opacity: 1;"></canvas><canvas width="128" height="94" style="width: 128.314px; height: 94.5909px; transform: translate3d(378.362px, 170.959px, -46.6388px); opacity: 1;"></canvas><canvas width="31" height="81" style="width: 31.8627px; height: 81.9684px; transform: translate3d(424.208px, 403.032px, -57.3469px); opacity: 1;"></canvas><canvas width="70" height="103" style="width: 70.6334px; height: 103.435px; transform: translate3d(413.932px, 57.1114px, -29.4254px); opacity: 1;"></canvas><canvas width="74" height="58" style="width: 74.889px; height: 58.8974px; transform: translate3d(413.932px, 0px, -66.6804px); opacity: 1;"></canvas><canvas width="146" height="57" style="width: 146.482px; height: 57.1114px; transform: translate3d(342.339px, 0px, -49.7177px); opacity: 1;"></canvas><canvas width="59" height="113" style="width: 59.8546px; height: 113.848px; transform: translate3d(354.077px, 57.1114px, -47.5115px); opacity: 1;"></canvas><canvas width="58" height="66" style="width: 58.1799px; height: 66.3703px; transform: translate3d(378.362px, 265.55px, -29.5733px); opacity: 1;"></canvas><canvas width="38" height="113" style="width: 38.7902px; height: 113.848px; transform: translate3d(410.148px, 57.1114px, -47.8323px); opacity: 1;"></canvas><canvas width="29" height="58" style="width: 29.0103px; height: 58.4012px; transform: translate3d(424.208px, 426.599px, -60.5628px); opacity: 1;"></canvas><canvas width="48" height="71" style="width: 48.2396px; height: 71.1109px; transform: translate3d(407.831px, 331.921px, -18.755px); opacity: 1;"></canvas><canvas width="48" height="58" style="width: 48.2396px; height: 58.5215px; transform: translate3d(407.831px, 368.077px, -42.225px); opacity: 1;"></canvas><canvas width="44" height="47" style="width: 44.8451px; height: 47.5235px; transform: translate3d(391.697px, 320.554px, -60.5816px); opacity: 1;"></canvas><canvas width="159" height="58" style="width: 159.947px; height: 58.4012px; transform: translate3d(271.441px, 426.599px, -61.6765px); opacity: 1;"></canvas><canvas width="75" height="94" style="width: 75.8124px; height: 94.5909px; transform: translate3d(334.336px, 170.959px, -58.3727px); opacity: 1;"></canvas><canvas width="151" height="59" style="width: 151.967px; height: 59.15px; transform: translate3d(272.242px, 368.077px, -70.3985px); opacity: 1;"></canvas><canvas width="152" height="58" style="width: 152.768px; height: 58.4012px; transform: translate3d(271.441px, 426.599px, -34.0459px); opacity: 1;"></canvas><canvas width="90" height="53" style="width: 90.2349px; height: 53.1627px; transform: translate3d(319.913px, 148.627px, -74.1682px); opacity: 1;"></canvas><canvas width="90" height="69" style="width: 90.2349px; height: 69.7885px; transform: translate3d(319.913px, 170.959px, -81.868px); opacity: 1;"></canvas><canvas width="132" height="107" style="width: 132.762px; height: 107.517px; transform: translate3d(281.169px, 41.1105px, -87.5273px); opacity: 1;"></canvas><canvas width="132" height="57" style="width: 132.762px; height: 57.1114px; transform: translate3d(281.169px, 0px, -80.0782px); opacity: 1;"></canvas><canvas width="135" height="104" style="width: 135.59px; height: 104.144px; transform: translate3d(272.242px, 323.084px, -77.1667px); opacity: 1;"></canvas><canvas width="97" height="47" style="width: 97.5408px; height: 47.5235px; transform: translate3d(310.291px, 320.554px, -20.8623px); opacity: 1;"></canvas><canvas width="81" height="57" style="width: 81.4061px; height: 57.5332px; transform: translate3d(310.291px, 265.55px, -32.641px); opacity: 1;"></canvas><canvas width="49" height="104" style="width: 49.2312px; height: 104.144px; transform: translate3d(261.059px, 323.084px, -62.0399px); opacity: 1;"></canvas><canvas width="79" height="108" style="width: 79.8792px; height: 108.112px; transform: translate3d(274.198px, 41.1105px, -24.1625px); opacity: 1;"></canvas><canvas width="68" height="82" style="width: 68.0713px; height: 82.3357px; transform: translate3d(310.291px, 240.748px, -18.8012px); opacity: 1;"></canvas><canvas width="61" height="41" style="width: 61.1698px; height: 41.1105px; transform: translate3d(281.169px, 0px, -43.3132px); opacity: 1;"></canvas><canvas width="79" height="53" style="width: 79.8792px; height: 53.1627px; transform: translate3d(274.198px, 148.627px, -55.9367px); opacity: 1;"></canvas><canvas width="141" height="84" style="width: 141.334px; height: 84.8499px; transform: translate3d(193.001px, 240.748px, -70.2281px); opacity: 1;"></canvas><canvas width="147" height="48" style="width: 147.812px; height: 48.6811px; transform: translate3d(186.524px, 192.067px, -55.5085px); opacity: 1;"></canvas><canvas width="147" height="133" style="width: 147.812px; height: 133.531px; transform: translate3d(186.524px, 192.067px, -56.8305px); opacity: 1;"></canvas><canvas width="133" height="52" style="width: 133.389px; height: 52.5678px; transform: translate3d(186.524px, 149.222px, -53.7333px); opacity: 1;"></canvas><canvas width="25" height="133" style="width: 25.4049px; height: 133.531px; transform: translate3d(167.596px, 192.067px, -32.8606px); opacity: 1;"></canvas><canvas width="157" height="41" style="width: 157.028px; height: 41.1105px; transform: translate3d(156.975px, 0px, -19.6746px); opacity: 1;"></canvas><canvas width="66" height="108" style="width: 66.0516px; height: 108.112px; transform: translate3d(215.118px, 41.1105px, -28.2572px); opacity: 1;"></canvas><canvas width="117" height="41" style="width: 117.289px; height: 41.1255px; transform: translate3d(193.001px, 323.084px, -33.5819px); opacity: 1;"></canvas><canvas width="54" height="57" style="width: 54.4745px; height: 57.7728px; transform: translate3d(217.767px, 427.227px, -19.0273px); opacity: 1;"></canvas><canvas width="87" height="51" style="width: 87.6743px; height: 51.2831px; transform: translate3d(186.524px, 140.784px, -21.2016px); opacity: 1;"></canvas><canvas width="107" height="99" style="width: 107.942px; height: 99.6731px; transform: translate3d(173.228px, 41.1105px, -31.0485px); opacity: 1;"></canvas><canvas width="124" height="59" style="width: 124.195px; height: 59.0678px; transform: translate3d(156.975px, 0px, -21.8807px); opacity: 1;"></canvas><canvas width="80" height="63" style="width: 80.4962px; height: 63.0182px; transform: translate3d(191.745px, 364.209px, -81.5375px); opacity: 1;"></canvas><canvas width="85" height="57" style="width: 85.3569px; height: 57.7728px; transform: translate3d(186.885px, 427.227px, -28.9467px); opacity: 1;"></canvas><canvas width="85" height="69" style="width: 85.3569px; height: 69.088px; transform: translate3d(186.885px, 380.766px, -45.748px); opacity: 1;"></canvas><canvas width="69" height="55" style="width: 69.314px; height: 55.1684px; transform: translate3d(191.745px, 325.598px, -30.6002px); opacity: 1;"></canvas><canvas width="128" height="81" style="width: 128.478px; height: 81.7159px; transform: translate3d(86.6402px, 59.0678px, -61.5252px); opacity: 1;"></canvas><canvas width="129" height="35" style="width: 129.232px; height: 35.1458px; transform: translate3d(88.535px, 449.854px, -34.7448px); opacity: 1;"></canvas><canvas width="128" height="77" style="width: 128.478px; height: 77.8188px; transform: translate3d(86.6402px, 114.248px, -50.6166px); opacity: 1;"></canvas><canvas width="107" height="73" style="width: 107.497px; height: 73.9475px; transform: translate3d(60.0995px, 208.361px, -37.0076px); opacity: 1;"></canvas><canvas width="99" height="94" style="width: 99.8836px; height: 94.1136px; transform: translate3d(86.6402px, 114.248px, -86.6408px); opacity: 1;"></canvas><canvas width="123" height="69" style="width: 123.242px; height: 69.088px; transform: translate3d(68.5029px, 380.766px, -28.049px); opacity: 1;"></canvas><canvas width="132" height="112" style="width: 132.902px; height: 112.4px; transform: translate3d(60.0995px, 213.198px, -56.9344px); opacity: 1;"></canvas><canvas width="124" height="65" style="width: 124.498px; height: 65.0748px; transform: translate3d(68.5029px, 325.598px, -18.3867px); opacity: 1;"></canvas><canvas width="132" height="108" style="width: 132.902px; height: 108.364px; transform: translate3d(60.0995px, 282.309px, -32.085px); opacity: 1;"></canvas><canvas width="86" height="21" style="width: 86.1273px; height: 21.1315px; transform: translate3d(100.396px, 192.067px, -33.7672px); opacity: 1;"></canvas><canvas width="128" height="55" style="width: 128.269px; height: 55.6561px; transform: translate3d(58.6161px, 429.344px, -62.8838px); opacity: 1;"></canvas><canvas width="128" height="59" style="width: 128.269px; height: 59.1816px; transform: translate3d(58.6161px, 390.673px, -81.7582px); opacity: 1;"></canvas><canvas width="92" height="84" style="width: 92.8831px; height: 84.4962px; transform: translate3d(64.0917px, 0px, -69.3752px); opacity: 1;"></canvas><canvas width="109" height="84" style="width: 109.136px; height: 84.4962px; transform: translate3d(64.0917px, 0px, -67.7378px); opacity: 1;"></canvas><canvas width="109" height="55" style="width: 109.136px; height: 55.1801px; transform: translate3d(64.0917px, 59.0678px, -52.7016px); opacity: 1;"></canvas><canvas width="40" height="73" style="width: 40.297px; height: 73.9475px; transform: translate3d(60.0995px, 208.361px, -25.3165px); opacity: 1;"></canvas><canvas width="76" height="86" style="width: 76.1931px; height: 86.393px; transform: translate3d(0px, 131.498px, -40.6156px); opacity: 1;"></canvas><canvas width="86" height="103" style="width: 86.6402px; height: 103.643px; transform: translate3d(0px, 114.248px, -26.3333px); opacity: 1;"></canvas><canvas width="24" height="103" style="width: 24.2034px; height: 103.643px; transform: translate3d(76.1931px, 114.248px, -33.8491px); opacity: 1;"></canvas><canvas width="64" height="84" style="width: 64.7647px; height: 84.4962px; transform: translate3d(0px, 0px, -53.143px); opacity: 1;"></canvas><canvas width="68" height="108" style="width: 68.5029px; height: 108.364px; transform: translate3d(0px, 282.309px, -70.9581px); opacity: 1;"></canvas><canvas width="68" height="98" style="width: 68.5029px; height: 98.7996px; transform: translate3d(0px, 291.873px, -26.2536px); opacity: 1;"></canvas><canvas width="88" height="55" style="width: 88.535px; height: 55.6561px; transform: translate3d(0px, 429.344px, -33.0018px); opacity: 1;"></canvas><canvas width="86" height="47" style="width: 86.6402px; height: 47.0018px; transform: translate3d(0px, 84.4962px, -51.6069px); opacity: 1;"></canvas><canvas width="58" height="55" style="width: 58.6161px; height: 55.6561px; transform: translate3d(0px, 429.344px, -79.7504px); opacity: 1;"></canvas><canvas width="64" height="70" style="width: 64.7647px; height: 70.0435px; transform: translate3d(0px, 0px, -58.6007px); opacity: 1;"></canvas><canvas width="76" height="64" style="width: 76.1931px; height: 64.418px; transform: translate3d(0px, 217.891px, -40.421px); opacity: 1;"></canvas><canvas width="76" height="25" style="width: 76.1931px; height: 25.4659px; transform: translate3d(0px, 204.07px, -28.0445px); opacity: 1;"></canvas><canvas width="68" height="41" style="width: 68.5029px; height: 41.7331px; transform: translate3d(0px, 387.611px, -29.4167px); opacity: 1;"></canvas><canvas width="60" height="62" style="width: 60.0995px; height: 62.3375px; transform: translate3d(0px, 229.535px, -54.4011px); opacity: 1;"></canvas><canvas width="64" height="61" style="width: 64.0917px; height: 61.4546px; transform: translate3d(0px, 70.0435px, -20.1038px); opacity: 1;"></canvas><canvas width="58" height="66" style="width: 58.6161px; height: 66.627px; transform: translate3d(0px, 387.611px, -21.3134px); opacity: 1;"></canvas></div>
+    
+    <script src="https://www.51qianduan.com/uploadfile/article/1806/18/4135/delaunay.js"></script>
+    <script src="https://www.51qianduan.com/uploadfile/article/1806/18/4135/TweenMax.min.js"></script>
+    <script>
+    var imageWidth = 768,
+    imageHeight = 485;
+    
+    var vertices = [],
+    indices,
+    boxes = [];
+    
+    var image,
+    fragments = [],
+    container = document.getElementById('container');
+    
+    window.onload = function () {
+        image = document.getElementById('src_img');
+    
+        triangulate();
+        makeBoxes();
+        makeFragments();
+    };
+    
+    function triangulate() {
+        var x,
+    y,
+    dx = imageWidth / 2,
+    dy = imageHeight / 2,
+    offset = 0.5;
+    
+        for (var i = 0; i <= imageWidth; i += dx) {
+            for (var j = 0; j <= imageHeight; j += dy) {
+                if (i && (i !== imageWidth)) x = i + randomRange(-dx * offset, dx * offset);
+                else x = i;
+    
+                if (j && (j !== imageHeight)) y = j + randomRange(-dy * offset, dy * offset);
+                else y = j;
+    
+                vertices.push([x, y]);
+            }
+        }
+    
+        indices = Delaunay.triangulate(vertices);
+        console.log('SSU indices', {indices, vertices});
+    }
+    
+    function makeBoxes() {
+        var p0, p1, p2,
+    xMin, xMax,
+    yMin, yMax;
+    
+        for (var i = 0; i < indices.length; i += 3) {
+            p0 = vertices[indices[i + 0]];
+            p1 = vertices[indices[i + 1]];
+            p2 = vertices[indices[i + 2]];
+    
+            xMin = Math.min(p0[0], p1[0], p2[0]);
+            xMax = Math.max(p0[0], p1[0], p2[0]);
+            yMin = Math.min(p0[1], p1[1], p2[1]);
+            yMax = Math.max(p0[1], p1[1], p2[1]);
+    
+            boxes.push({
+                x: xMin,
+                y: yMin,
+                w: xMax - xMin,
+                h: yMax - yMin
+            });
+        }
+
+        console.log('SSU boxes', {boxes});
+
+    }
+    
+    function makeFragments() {
+        var p0, p1, p2,
+    box,
+    fragment;
+    
+        TweenMax.set(container, { perspective: 500 });
+    
+        var tl0 = new TimelineMax({ repeat: -1 });
+    
+        for (var i = 0; i < indices.length; i += 3) {
+            p0 = vertices[indices[i + 0]];
+            p1 = vertices[indices[i + 1]];
+            p2 = vertices[indices[i + 2]];
+            box = boxes[i / 3];
+    
+            fragment = new Fragment(p0, p1, p2, box);
+    
+            var rx = randomRange(30, 60) * ((i % 2) ? 1 : -1);
+            var ry = randomRange(30, 60) * ((i % 2) ? -1 : 1);
+            var tl1 = new TimelineMax();
+    
+            TweenMax.set(fragment.canvas, {
+                y: box.y - 1000
+            });
+    
+            tl1.to(fragment.canvas, randomRange(0.9, 1.1), {
+                y: box.y,
+                ease: Back.easeOut
+            });
+            tl1.to(fragment.canvas, 0.5, {
+                z: -100,
+                ease: Cubic.easeIn,
+                delay: 0.4
+            });
+            tl1.to(fragment.canvas, randomRange(1, 1.2), {
+                rotationX: rx,
+                rotationY: ry,
+                z: 250,
+                alpha: 0,
+                ease: Cubic.easeOut
+            });
+    
+            tl0.insert(tl1);
+    
+            fragments.push(fragment);
+            container.appendChild(fragment.canvas);
+        }
+    }
+    
+    function randomRange(min, max) {
+        return min + (max - min) * Math.random();
+    }
+    
+    Fragment = function (v0, v1, v2, box) {
+        this.v0 = v0;
+        this.v1 = v1;
+        this.v2 = v2;
+        this.box = box;
+    
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = this.box.w;
+        this.canvas.height = this.box.h;
+        this.canvas.style.width = this.box.w + 'px';
+        this.canvas.style.height = this.box.h + 'px';
+        this.ctx = this.canvas.getContext('2d');
+    
+        TweenMax.set(this.canvas, {
+            x: this.box.x,
+            y: this.box.y
+        });
+    
+        this.ctx.translate(-this.box.x, -this.box.y);
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.v0[0], this.v0[1]);
+        this.ctx.lineTo(this.v1[0], this.v1[1]);
+        this.ctx.lineTo(this.v2[0], this.v2[1]);
+        this.ctx.closePath();
+        this.ctx.clip();
+        this.ctx.drawImage(image, 0, 0);
+    }; //@ sourceURL=pen.js
+    </script>
+    
+    
+    </body></html>
